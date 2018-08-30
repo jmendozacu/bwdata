@@ -1,0 +1,363 @@
+<?php $buzzerHelper = $this->helper('Bakeway\Buzzer\Helper\Data'); ?>
+<?php $alaramStatus =  $buzzerHelper->getAlarmStatus();
+$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+$buzzerBlock  = $objectManager->create('\Bakeway\Buzzer\Block\Buzzer\Index');
+$sellerAlarmStatus = $buzzerBlock->getSellerAlaramStatus();
+if($alaramStatus != 0 && $sellerAlarmStatus == 1)
+{
+    $alaramTimes =  $buzzerHelper->getAlarmTime();
+?>
+<!-- order alert alarm code start-->
+<script type="text/javascript">
+    function buzzerStart(){
+        var seller_id = 12;
+        require([
+            "jquery",
+            "jquery/ui"
+        ], function($){
+
+            jQuery.ajax({
+                type: "POST",
+                showLoader: false,
+                url: "<?php echo $this->getUrl('buzzer/buzzer/index', ['_secure' => true]); ?>",
+                data: {
+                    "seller_id": seller_id
+                },
+                dataType: "json",
+                success: function (data) {
+                var buzzer_input = data.buzzer;
+                    if(buzzer_input === 'yes')
+                    {
+                        document.getElementById('sample_mp3').play();
+                    }
+
+                }
+            });
+        });
+    }
+
+    var second = '<?php echo $alaramTimes?>';
+
+    window.setInterval(function(){
+      buzzerStart();
+    }, second);
+
+
+</script>
+
+<!-- end-->
+<audio id="sample_mp3" controls style="display:none">
+    <source src="https://s3.ap-south-1.amazonaws.com/bakeway-prod-web/webalarm.mp3" type="audio/mpeg">
+</audio>
+
+<?php }?>
+
+<?php
+    $header_type = $this->getConfig('porto_settings/header/header_type');
+?>
+<header class="page-header type<?php echo $header_type; ?>">
+<?php echo $this->getChildHtml("header_customer_form_login"); ?>
+<?php if($header_type == 3 || $header_type == 4 || $header_type == 9): ?>
+    <div class="header content">
+    <?php echo $this->getChildHtml("logo"); ?>
+    <?php echo $this->getChildHtml("navigation.sections"); ?>
+        <div class="panel header">
+            <div class="top-panel">
+                <?php echo $this->getChildHtml("skip_to_content"); ?>
+                <?php echo $this->getChildHtml("header.links"); ?>
+                <div class="search-area">
+                    <a href="javascript:void(0)" class="search-toggle-icon"><i class="porto-icon-search"></i></a>
+                    <?php echo $this->getChildHtml("top.search"); ?>
+                </div>
+            </div>
+            <div class="bottom-panel">
+                <?php echo $this->getChildHtml("currency"); ?>
+                <?php echo $this->getChildHtml("store_language"); ?>
+                <?php echo $this->getChildHtml("minicart"); ?>
+            </div>
+        </div>
+    </div>
+<?php elseif($header_type == 12): ?>
+    <div class="header content">
+    <?php echo $this->getChildHtml("logo"); ?>
+    <?php echo $this->getChildHtml("navigation.sections"); ?>
+        <div class="panel header">
+            <div class="top-panel">
+                <?php echo $this->getChildHtml("skip_to_content"); ?>
+                <div class="top-links-area">
+                    <a class="top-links-icon" href="javascript:void(0)">links</a>
+                    <?php echo $this->getChildHtml("header.links"); ?>
+                </div>
+                <?php echo $this->getChildHtml("custom_block"); ?>
+                <div class="search-area">
+                    <a href="javascript:void(0)" class="search-toggle-icon"><i class="porto-icon-search"></i></a>
+                    <?php echo $this->getChildHtml("top.search"); ?>
+                </div>
+            </div>
+            <div class="bottom-panel">
+                <?php echo $this->getChildHtml("currency"); ?>
+                <?php echo $this->getChildHtml("store_language"); ?>
+                <?php echo $this->getChildHtml("minicart"); ?>
+            </div>
+        </div>
+    </div>
+<?php elseif($header_type == 13): ?>
+    <div class="header content">
+    <?php echo $this->getChildHtml("logo"); ?>
+        <div class="panel header">
+            <div class="top-panel">
+                <?php echo $this->getChildHtml("skip_to_content"); ?>
+                <div class="menu-area">
+                    <a href="javascript:void(0)" class="shop-menu">Shop</a>
+                    <?php echo $this->getChildHtml("navigation.sections"); ?>
+                </div>
+                <div class="top-links-area">
+                    <a class="top-links-icon" href="javascript:void(0)">links</a>
+                    <?php echo $this->getChildHtml("header.links"); ?>
+                </div>
+            </div>
+            <div class="bottom-panel">
+                <?php echo $this->getChildHtml("currency"); ?>
+                <?php echo $this->getChildHtml("store_language"); ?>
+                <div class="search-area">
+                    <a href="javascript:void(0)" class="search-toggle-icon"><i class="porto-icon-search"></i></a>
+                    <?php echo $this->getChildHtml("top.search"); ?>
+                </div>
+                <?php echo $this->getChildHtml("minicart"); ?>
+            </div>
+        </div>
+    </div>
+<?php elseif($header_type == 5 ): ?>
+    <div class="panel wrapper">
+        <div class="panel header">
+            <?php echo $this->getChildHtml("skip_to_content"); ?>
+            <?php echo $this->getChildHtml("currency"); ?>
+            <?php echo $this->getChildHtml("store_language"); ?>
+            <?php echo $this->getChildHtml("header.links"); ?>
+        </div>
+    </div>
+    <div class="header content">
+        <?php echo $this->getChildHtml("logo"); ?>
+        <?php echo $this->getChildHtml("minicart"); ?>
+        <div class="search-area">
+            <a href="javascript:void(0)" class="search-toggle-icon"><i class="porto-icon-search"></i></a>
+            <?php echo $this->getChildHtml("top.search"); ?>
+        </div>
+        <?php echo $this->getChildHtml("navigation.sections"); ?>
+    </div>
+<?php elseif($header_type == 6 ): ?>
+    <div class="panel wrapper">
+        <div class="panel header">
+            <?php echo $this->getChildHtml("skip_to_content"); ?>
+            <?php echo $this->getChildHtml("currency"); ?>
+            <?php echo $this->getChildHtml("store_language"); ?>
+            <?php echo $this->getChildHtml("header.links"); ?>
+        </div>
+    </div>
+    <div class="header content">
+        <?php echo $this->getChildHtml("logo"); ?>
+        <?php echo $this->getChildHtml("minicart"); ?>
+        <div class="search-area">
+            <a href="javascript:void(0)" class="search-toggle-icon"><i class="porto-icon-search"></i></a>
+            <?php echo $this->getChildHtml("top.search"); ?>
+        </div>
+        <?php echo $this->getChildHtml("custom_block"); ?>
+        <?php echo $this->getChildHtml("navigation.sections"); ?>
+    </div>
+<?php elseif($header_type == 7 ): ?>
+    <div class="panel wrapper">
+        <div class="panel header">
+            <div class="search-area">
+                <a href="javascript:void(0)" class="search-toggle-icon"><em class="porto-icon-search"></em><?php echo __('Search'); ?></a>
+                <?php echo $this->getChildHtml("top.search"); ?>
+            </div>
+            <?php echo $this->getChildHtml("skip_to_content"); ?>
+            <?php echo $this->getChildHtml("currency"); ?>
+            <?php echo $this->getChildHtml("store_language"); ?>
+            <?php echo $this->getChildHtml("minicart"); ?>
+            <span class="split"></span>
+            <div class="toplinks-area">
+                <a href="javascript:void(0)" class="top-links-icon"><?php echo __('Links'); ?></a>
+                <?php echo $this->getChildHtml("header.links"); ?>
+            </div>
+            <span class="split"></span>
+            <?php echo $this->getChildHtml("custom_block"); ?>
+        </div>
+    </div>
+    <div class="header content">
+        <?php echo $this->getChildHtml("logo"); ?>
+        <?php echo $this->getChildHtml("navigation.sections"); ?>
+    </div>
+<?php elseif($header_type == 8 ): ?>
+    <div class="panel wrapper">
+        <div class="panel header">
+            <?php echo $this->getChildHtml("skip_to_content"); ?>
+            <?php echo $this->getChildHtml("currency"); ?>
+            <?php echo $this->getChildHtml("store_language"); ?>
+            <?php echo $this->getChildHtml("header.links"); ?>
+        </div>
+    </div>
+    <div class="header content">
+    <?php echo $this->getChildHtml("logo"); ?>
+    <?php echo $this->getChildHtml("minicart"); ?>
+    <?php echo $this->getChildHtml("top.search"); ?>
+    <?php echo $this->getChildHtml("custom_block"); ?>
+    </div>
+    <div class="menu-container">
+        <?php
+            $toggle_text = $this->getConfig('porto_settings/header/toggle_text');
+            $custom_block_id_8 = $this->getConfig('porto_settings/header/static_block_8');
+        ?>
+        <div class="container">
+            <div class="menu-wrapper row">
+                <div class="drop-menu">
+                    <a href="javascript:void(0)">
+                        <?php echo $toggle_text; ?>
+                    </a>
+                    <?php echo $this->getChildHtml("navigation.sections"); ?>
+                </div>
+                <div class="custom-menu-block">
+                <?php
+                    $block = $this->getLayout()->createBlock('Magento\Cms\Block\Block');
+                    if($block) {
+                        $block->setBlockId($custom_block_id_8);
+                    }
+                    if($block){
+                        echo $block->toHtml();
+                    }
+                ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php elseif($header_type == 10 ): ?>
+    <div class="switcher-area">
+        <?php echo $this->getChildHtml("skip_to_content"); ?>
+        <?php echo $this->getChildHtml("currency"); ?>
+        <?php echo $this->getChildHtml("store_language"); ?>
+        <?php echo $this->getChildHtml("minicart"); ?>
+    </div>
+    <div class="header content">
+    <?php echo $this->getChildHtml("logo"); ?>
+    <?php echo $this->getChildHtml("navigation.sections"); ?>
+    <?php echo $this->getChildHtml("top.search"); ?>
+    </div>
+    <div class="panel wrapper">
+        <div class="panel header">
+            <?php echo $this->getChildHtml("header.links"); ?>
+        </div>
+    </div>
+    <div class="custom-block-area">
+        <?php echo $this->getChildHtml("custom_block"); ?>
+    </div>
+<?php elseif($header_type == 14 ): ?>
+    <div class="header content">
+    <?php echo $this->getChildHtml("logo"); ?>
+    <?php echo $this->getChildHtml("navigation.sections"); ?>
+        <div class="panel header">
+            <div class="top-panel">
+                <?php echo $this->getChildHtml("skip_to_content"); ?>
+                <?php echo $this->getChildHtml("header.links"); ?>
+            </div>
+            <div class="bottom-panel">
+                <?php echo $this->getChildHtml("currency"); ?>
+                <?php echo $this->getChildHtml("store_language"); ?>
+                <div class="search-area">
+                    <a href="javascript:void(0)" class="search-toggle-icon"><i class="porto-icon-search"></i><span><?php echo __('Search'); ?></span></a>
+                    <?php echo $this->getChildHtml("top.search"); ?>
+                </div>
+            </div>
+        </div>
+        <?php echo $this->getChildHtml("minicart"); ?>
+    </div>
+<?php elseif($header_type == 15 ): ?>
+    <div class="header content">
+    <?php echo $this->getChildHtml("logo"); ?>
+        <div class="header-right-area">
+            <div class="header-link-area">
+                <div class="top-links-area panel header">
+                    <?php echo $this->getChildHtml("skip_to_content"); ?>
+                    <?php echo $this->getChildHtml("header.links"); ?>
+                </div>
+                <div class="main-link">
+                    <?php echo $this->getChildHtml("navigation.sections"); ?>
+                </div>
+            </div>
+            <div class="switcher-area">
+                <div class="search-area">
+                    <a href="javascript:void(0)" class="search-toggle-icon"><i class="porto-icon-search"></i><span><?php echo __('Search'); ?></span></a>
+                    <?php echo $this->getChildHtml("top.search"); ?>
+                </div>
+                <div class="cart-area">
+                    <?php echo $this->getChildHtml("currency"); ?>
+                    <?php echo $this->getChildHtml("store_language"); ?>
+                    <?php echo $this->getChildHtml("minicart"); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php elseif($header_type == 17 ): ?>
+    <div class="main-panel-top">
+        <div class="container">
+            <div class="main-panel-inner">
+                <div class="panel wrapper">
+                    <div class="panel header">
+                        <?php echo $this->getChildHtml("skip_to_content"); ?>
+                        <?php echo $this->getChildHtml("currency"); ?>
+                        <?php echo $this->getChildHtml("store_language"); ?>
+                        <?php echo $this->getChildHtml("header.links"); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header content">
+        <?php echo $this->getChildHtml("logo"); ?>
+        <?php echo $this->getChildHtml("minicart"); ?>
+        <?php echo $this->getChildHtml("top.search"); ?>
+        <?php echo $this->getChildHtml("custom_block"); ?>
+    </div>
+    <?php echo $this->getChildHtml("navigation.sections"); ?>
+<?php elseif($header_type == 18 ): ?>
+    <div class="main-panel-top">
+        <div class="container">
+            <div class="main-panel-inner">
+                <div class="panel wrapper">
+                    <div class="panel header">
+                        <?php echo $this->getChildHtml("skip_to_content"); ?>
+                        <?php echo $this->getChildHtml("header.links"); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header content">
+        <div class="select-area">
+            <?php echo $this->getChildHtml("currency"); ?>
+            <?php echo $this->getChildHtml("store_language"); ?>
+        </div>
+        <?php echo $this->getChildHtml("logo"); ?>
+        <?php echo $this->getChildHtml("minicart"); ?>
+        <?php echo $this->getChildHtml("top.search"); ?>
+    </div>
+    <?php echo $this->getChildHtml("navigation.sections"); ?>
+<?php else: ?>
+    <div class="panel wrapper">
+        <div class="panel header">
+            <?php echo $this->getChildHtml("skip_to_content"); ?>
+            <?php echo $this->getChildHtml("currency"); ?>
+            <?php echo $this->getChildHtml("store_language"); ?>
+            <?php echo $this->getChildHtml("header.links"); ?>
+        </div>
+    </div>
+    <div class="header content">
+    <?php echo $this->getChildHtml("logo"); ?>
+    <?php echo $this->getChildHtml("minicart"); ?>
+    <?php echo $this->getChildHtml("top.search"); ?>
+    <?php echo $this->getChildHtml("custom_block"); ?>
+    </div>
+    <?php echo $this->getChildHtml("navigation.sections"); ?>
+<?php endif; ?>
+</header>
+
+

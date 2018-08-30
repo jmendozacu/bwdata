@@ -1,0 +1,59 @@
+<?php
+$order = $block->getOrderData();
+if(count($order) > 0){
+    foreach($order as $orderData){ ?>
+<div class="admin__page-section-item order-information" style="width:auto">
+    <div class="admin__page-section-item-title">
+                <span class="title">
+                <?php echo __("Additional order information")?>
+                </span>
+    </div>
+    <div class="admin__page-section-item-content">
+        <table class="admin__table-secondary order-information-table">
+            <tbody>
+                <tr>
+                    <th>Seller Name </th>
+                    <td><?php echo $orderData['shop_title'] ?></td>
+                </tr>
+                <tr>
+                    <th>Store Unique Name</th>
+                    <td><span id="order_status"><?php if($orderData['store_unique_name']) { ?> <?php echo $orderData['store_unique_name']?><?php } ?></span></td>
+                </tr>
+                <tr>
+                    <th>Tracking URL</th>
+                    <td><a href="<?php echo $block->getOrderTrackingUrl() . '?token=' . $orderData['order_tracking_token'] ?>" target="_blank">
+                            Track Order
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Message on Cake </th>
+                    <td><?php echo $orderData['custom_message'];?></td>
+                </tr>
+                <tr>
+                    <th>Message on Card</th>
+                    <td><?php echo $orderData['message_on_card'];?></td>
+                </tr>
+                <tr>
+                    <th>Delivery Type</th>
+                    <td><?php echo $orderData['delivery_type'];?></td>
+                </tr>
+                <tr>
+                    <th>Delivery Time</th>
+                    <td><?php echo $orderData['delivery_time'];?></td>
+                </tr>
+                <tr>
+                    <th>Bakery Number</th>
+                    <td><?php echo $orderData['store_owner_mobile_no'];?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+        <?php
+    }
+
+}else{
+    echo "sorry,no Record Found";
+}
+?>

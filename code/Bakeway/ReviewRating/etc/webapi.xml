@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 iPragmatech. All rights reserved.
+ * See COPYING.txt for license details.
+ * Contributor Author : Manish Kumar
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <route url="/V1/feedback/:token" method="GET">
+        <service class="Bakeway\ReviewRating\Api\ReviewRepositoryInterface" method="getTokenReviewdetails"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+
+    <route url="/V1/feedback/:token" method="POST">
+        <service class="Bakeway\ReviewRating\Api\ReviewRepositoryInterface" method="saveReview"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+</routes>

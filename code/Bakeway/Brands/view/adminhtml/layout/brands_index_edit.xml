@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="left">
+            <block class="Bakeway\Brands\Block\Adminhtml\Brands\Edit\Tabs" name="brands.edit.tabs"/>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Bakeway\Brands\Block\Adminhtml\Brands\Edit" name="brands.edit"/>
+        </referenceContainer>
+    </body>
+</page>

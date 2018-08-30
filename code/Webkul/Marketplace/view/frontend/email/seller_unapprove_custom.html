@@ -1,0 +1,72 @@
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<!--@subject Seller Disapproved Notification  @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name"
+} @-->
+
+<!--@styles 
+.email-information ,.email-intro p,.footer p{ font-size:16px; }
+@-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans 'Hi,'}}</p>
+            <p>
+                {{trans "Please take a note."}}
+            </p>
+            <p>
+                {{trans "Below seller has been disapproved."}}
+            </p></td>
+    </tr>
+
+    <tr class="email-information">
+        <td>
+            <table class="product-name">
+                <tr>
+                    <td class="product-details">
+                        <b>{{trans "Seller Id"}}</b>: {{var myvar1|raw}}
+
+                    </td>
+                </tr>
+		        <tr>
+                    <td class="product-details">
+                        <b>{{trans "Seller Name"}}</b> : {{var myvar2|raw}}
+
+                    </td>
+                </tr>
+
+                {{if sellerbusinessName}}
+                <tr>
+                    <td class="product-details">
+                        <b>{{trans "Business Name"}}</b> : {{var sellerbusinessName|raw}}
+                    </td>
+                </tr>
+                {{/if}}
+
+                <tr>
+                    <td class="product-details">
+                        <b>{{trans "City"}}</b> : {{var cityName|raw}}
+                    </td>
+                </tr>
+            </table>
+           
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

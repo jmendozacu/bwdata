@@ -1,0 +1,96 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+
+<?php if ($block->getRatingSummary()->getCount()): ?>
+    <div class="rating-box">
+        <div class="rating" style="width:<?php /* @escapeNotVerified */ echo ceil($block->getRatingSummary()->getSum() / ($block->getRatingSummary()->getCount())) ?>%;"></div>
+    </div>
+<?php else: ?>
+    <?php /* @escapeNotVerified */ // echo __("Rating isn't Available") ?>
+<?php endif; ?>
+<style>
+
+#review-admin-table{ border: 1px solid;}
+#review-admin-table th{padding: 20px;}
+</style>
+<?php
+/**
+ * showing all rating start
+ */
+$entityName = "";
+$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+$reviewid =  $this->getRequest()->getParam('id');
+if(!empty($reviewid)){
+    $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+    $ratingCollection = $objectManager->get("Bakeway\ReviewRating\Helper\Data")->getRatingSummeryForOrder($reviewid);
+    if(count($ratingCollection) > 0) {
+        ?>
+        <table id="review-admin-table">
+        <thead>
+        <tr>
+            <th><?php echo __("Rating Type");?> </th>
+            <th><?php echo __("Question");?></th>
+            <th><?php echo __("Rating");?></th>
+        </tr>
+
+        </thead>
+        <?php
+        foreach ($ratingCollection as $data) {
+
+            ?>
+            <?php $ratingData = $objectManager->get("Bakeway\ReviewRating\Helper\Data")->getratingTitle( $data['rating_id']);
+            if(isset($ratingData)){
+                  ?>
+
+                    <tbody>
+                        <tr>
+                            <th><?php echo $entityName =  $objectManager->get("Bakeway\ReviewRating\Helper\Data")->getEntityName($ratingData);?> </th>
+                            <th><?php echo  $objectManager->get("Bakeway\ReviewRating\Helper\Data")->getratingQuestion($data['rating_id']);?>
+                                </th>
+                            <th>
+                            <?php $yesnoRating =  $objectManager->get("Bakeway\ReviewRating\Helper\Data")->getSingleSelectRatingType($data['rating_id']);
+                            if($yesnoRating === true)
+                            {
+                                if($data['percent'] == 20){ ?>
+                                   <?php echo  __("Yes")?>
+                                <?php }elseif($data['percent'] == 40){?>
+                                    <?php echo  __("No")?>
+                               <?php  } else {?>
+                                    <?php echo  __("No")?>
+                                <?php     }
+                                ?>
+
+                            <?php } else { ?>
+                                <div class="rating-box">
+                                    <div class="rating" style="width:<?php /* @escapeNotVerified */ echo $data['percent'] ?>%;"></div>
+                                </div>
+                             <?php } ?>
+                            </th>
+                        </tr>
+
+                    </tbody>
+
+                <div style="rating-title">
+
+
+              </div>
+            <?php }
+
+            ?>
+
+
+       <?php } ?>
+        </table><?php
+
+    } ?>
+
+<?php }
+
+?>

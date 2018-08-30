@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway
+ *
+ * @category  Bakeway
+ * @package   Bakeway_Partnerlocations
+ * @author    Bakeway
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="Bakeway_Partnerlocations::js/jquery-gmaps-latlon-picker.js"/>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYjq3gU-YfuRTGl2Jzvx8aja3vAIAzsx8" src_type="url"/>
+        <css src="Bakeway_Partnerlocations::css/map.css"/>
+    </head>
+<body>
+    <referenceBlock name="customer_form">
+
+        <block class="Bakeway\Partnerlocations\Block\Adminhtml\Customer\Edit\Tab\Locations"
+               name="customer_edit_tab_locations">
+            <action method="setTabLabel">
+                <argument name="label" xsi:type="string">Store Addresses</argument>
+            </action>
+        </block>
+        <referenceBlock name="customer_edit_tab_view">
+            <referenceBlock name="personal_info">
+               <action method="setTemplate">
+                   <argument name="template" xsi:type="string">Bakeway_Partnerlocations::tab/view/personal_info.phtml</argument>
+               </action>
+            </referenceBlock>
+        </referenceBlock>
+    </referenceBlock>
+</body>
+</page>

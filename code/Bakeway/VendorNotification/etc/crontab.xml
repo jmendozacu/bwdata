@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway
+ *
+ * @category  Bakeway
+ * @package   Bakeway_VendorNotification
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="vendor_notification_cron_group">
+        <job name="vendor_out_for_delivery_notifiation" instance="Bakeway\VendorNotification\Helper\Data" method="sendPushNotificationForUpcomingOrderCron">
+            <schedule>50 20 * * *</schedule>
+        </job>
+        <!-- <job name="vendor_accept_notifiation" instance="Bakeway\VendorNotification\Helper\Data" method="sendPushNotificationCron">
+             <schedule>*/10 * * * *</schedule>
+         </job>
+         <job name="vendor_out_for_delivery_notifiation" instance="Bakeway\VendorNotification\Helper\Data" method="sendPushNotificationForUpcomingOrderCron">
+             <schedule>*/1 */21 * * *</schedule>
+         </job>-->
+    </group>
+    <group id="default">
+        <job name="vendor_accept_notifiation" instance="Bakeway\VendorNotification\Helper\Data" method="sendPushNotificationCron">
+            <schedule>*/10 * * * *</schedule>
+        </job>
+    </group>
+
+</config>

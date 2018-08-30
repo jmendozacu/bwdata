@@ -1,0 +1,405 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Webkul\Marketplace\Block\Transaction\View */
+
+require(BP . "/vendor/dompdf/src/Autoloader.php");
+Dompdf\Autoloader::register();
+use Dompdf\Dompdf;
+$dompdf = new DOMPDF();
+/**invoice varrible**/
+$helper = $this->helper('Webkul\Marketplace\Helper\Data');
+$payoutHelper = $this->helper('Bakeway\PayoutsCalculation\Helper\Data');
+
+$collection = $block->sellertransactionDetails();
+$orderslist = $block->sellertransactionOrderDetails($this->getRequest()->getParam('id'));
+
+$getSellerData = $helper->getInvoiceSellerData();
+$storename = $helper->getInvoiceStoreName();
+$storeaddress = $helper->getOwnerstoreAdddress();
+
+/**
+ * @BKWYADMIN-981
+ * adding igst condition
+ */
+$sellerId = $getSellerData->getSellerId();
+$sellerCityName = $this->helper("Bakeway\HomeDeliveryshipping\Helper\Data")->getSellerCityNameFromCityId($sellerId);
+$igstFlag = false;
+$sellerCityName = strtolower($sellerCityName);
+if($sellerCityName != "pune"){ 
+   $igstFlag = true; 
+}
+         
+$orderId = $tottax = $commsionExclTax = $commsionTax =$commsionRate = $proBasePrice = $orderEntityId =  [];
+ $i = 0;
+ $_count = count($orderslist); 
+if(!empty($_count)){	
+	$subtotal = 0;
+	foreach($orderslist as $item){
+	//	echo "<pre>";
+		//print_r( $item->getData());
+	$i++;
+	$mageorderid = $item->getOrderId();
+	$item_status="";
+	$subtotal=$subtotal+$item->getActualSellerAmount();
+	$proBasePrice[] = $item->getMageproPrice();
+
+	/**
+	* Bakeway Fields
+	*/
+	$tcsFee = 0;
+	$pgFee = 0;
+	$deliveryCharge = 0;
+	$payoutsAmount = 0;
+	if($item->getIsShipping()) {
+	$tcsFee = $payoutHelper->getTcsByOrderId($mageorderid);
+	$pgFee = $payoutHelper->getPgFeeByOrderId($mageorderid);
+	$deliveryCharge = $payoutHelper->getDeliveryChargeByOrderId($mageorderid);
+	}
+
+	$orderId[] = $item->getMagerealorderId();
+	$tottax[] = $item->getTotalTax();
+	$payoutsAmount = $payoutsAmount + $deliveryCharge - $tcsFee - $pgFee;
+
+				
+   $tax[] =  $item->getTotalTax();
+   $commsionTax[] = $item->getCommissionInclTax();
+   $commsionExclTax[] = $item->getTotalCommission();
+   $commsionRate[]  = $item->getCommissionRate();
+
+		$orderEntityId[] = $item->getOrderId();
+	
+}
+    
+    $taxPart =  array_sum($commsionExclTax);
+    $taxval =  ($taxPart * 9) / 100;
+	if(!empty(($commsionRate))):
+	$commsionRate = number_format(current($commsionRate),0)."%";
+	endif;
+
+/**product base price**/	
+ $proBasePrice = array_sum($proBasePrice);
+ $productBaseprice =   'Rs. '.$proBasePrice;
+ 
+ /**calculate amount**/
+ $amoutPrice = ($proBasePrice * $commsionRate) / 100;
+ $vendorAmount =  'Rs. '.$amoutPrice;
+ $gstamoutPrice = ($amoutPrice * 9) / 100;
+ $vendorGSTandCgstAmount =  $gstamoutPrice;
+
+
+/**calculate convenience fee **/
+	//$vendororderId = $helper->getAllOrderConvienceFee($orderEntityId);
+	//$totConvienFees = array_sum($vendororderId);
+	//$displayConvienFees = 'Rs. '.$totConvienFees;
+	//$gstamoutConvienPrice = ($totConvienFees * 9) / 100;
+
+/**Total vendor cgst amount**/
+	//$vendorGSTandCgstValue = $vendorGSTandCgstAmount + $gstamoutConvienPrice;
+	$vendorGSTandCgstValue = $vendorGSTandCgstAmount;
+        $vendorIGSTValue = $vendorGSTandCgstValue;
+	$vendorGSTandCgstValue = 'Rs. '.$vendorGSTandCgstValue;
+
+	/**calculate gross amount**/
+
+	//$grossAmount =  $amoutPrice + $gstamoutPrice + $gstamoutPrice + $totConvienFees + $gstamoutConvienPrice + $gstamoutConvienPrice;
+	$grossAmount =  $amoutPrice + $gstamoutPrice + $gstamoutPrice;
+	$grossAmountVal =   'Rs. '.$grossAmount;
+	$wordsTotStr = 'Rs. '.$helper->displaywordsinInvoicePdf(round($grossAmount)). "rupees only";
+?>
+<?php
+/*igst*/
+$vendorIGSTValue = $vendorIGSTValue * 2; //igst calculation dont change these variables
+$igstcolumn = $cgstcolumn = $sgstcolumn = "";
+
+if( $igstFlag === true){
+      $igstcolumn =  '<tr><td>IGST</td>
+                    <td>18%</td>
+                    <td></td>
+		    <td>'.'Rs. '.$vendorIGSTValue.'</td></tr>';
+} 
+
+if( $igstFlag === false){
+    
+      $cgstcolumn = '<tr><td>CGST</td>
+                    <td>9%</td>
+                    <td></td>
+	            <td>'.$vendorGSTandCgstValue.'</td></tr>';
+      $sgstcolumn = ' <tr><td>SGST</td>
+                    <td>9%</td>
+                    <td></td>
+		    <td>'.$vendorGSTandCgstValue.'</td></tr>';
+    
+}
+
+/*bakeway details*/
+$storename =  $helper->getInvoiceStoreName();
+$storeaddress =   $helper->getBakewayStoreAddress();
+$gstn = $helper->getBakewayGstin();
+$panNumber = $helper->getBakewayPan();
+$sacNumber = "996211";
+$financialYearFrom = "";
+$financialYearTo = "";
+
+/**check fiancial year**/
+$pst = date('m');
+
+if($pst >= 4) {
+
+$currentYear =date('Y');
+
+$financialYearFrom = $currentYear;
+
+$toYear = date('Y', strtotime('+1 year'));
+
+$financialYearTo =$toYear;
+
+}
+
+else {
+
+$currentYear =date('Y', strtotime('-1 year'));
+
+$financialYearFrom = $currentYear;
+
+$toYear = date('Y');
+
+$financialYearTo = $toYear;
+
+}
+
+$orderDateTime =  $financialYearFrom .'  -  '. $financialYearTo;
+$invoiceYear =  str_replace('20','',$orderDateTime);
+$inVoiceNumber= $collection->getTransactionInvoiceNumber();
+$inVoiceDate = $block->formatDate($collection->getCreatedAt(), \IntlDateFormatter::LONG);	
+/**pdf file name**/
+$invoiceFileYear =  $financialYearFrom .'-'. $financialYearTo;
+$invoiceName =  str_replace('20','',$invoiceFileYear);
+
+/**seller details**/
+$storeOwnerName = $getSellerData['business_name'];
+$storeStreetAddress = $getSellerData['store_street_address'];
+$TransactionId = $collection->getTransactionId();
+$orderid= implode(", ",$orderId);
+if($getSellerData['userdata_gstin_number']):
+$sellerGstin = $getSellerData['userdata_gstin_number'];
+else:
+$sellerGstin ="N/A";
+endif;
+
+if($getSellerData['userdata_pan_number']):
+$sellerPan = $getSellerData['userdata_pan_number'];
+else:
+$sellerPan  ="N/A";
+endif;
+
+/**get logo**/
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$logo = $objectManager->get('\Magento\Theme\Block\Html\Header\Logo');
+
+/**logo image**/
+//$logo =  $_SERVER["DOCUMENT_ROOT"].'/bakeway_gi/bakeway/pub/media/invoice_pdf/logo.png';
+$logo =  $_SERVER["DOCUMENT_ROOT"].'/media/invoice_pdf/logo.png';
+?>
+<?php
+/****/
+$html = '<head>
+    <style>
+        body {
+            font-size: 15px;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        h3 {
+            margin: 0;
+        }
+		.invoice-main p{margin-bottom:4px;margin-top: 7px;}
+		.invoice-second-div ul{    margin-top: 8px;}
+		.invoice-sub-main ul li label{font-weight:bold}
+        section.invoiceTop{
+            overflow: hidden;
+            margin: 10px 0px 20px 0px;
+        }
+         
+        div.address {
+            width: 50%;
+            float: left;
+            overflow: hidden;
+        }
+
+        div.invoiceInfo {
+            width: 30%;
+            overflow: hidden;
+        }
+
+        div.address >p {
+            margin-top: 0px;
+            margin-bottom: 3px;
+        }
+
+        div.invoiceInfo >ul >li >label,
+         p.totalAmount,
+         section.invoiceAuthorised {
+            font-weight: bold;
+        }
+        section.invoiceAuthorised{
+            float:right;
+        }
+         ul >li{
+             margin-bottom: 5px;
+         }
+
+        section.invoiceDetail {
+            clear: both;
+        }
+
+        table {
+            width: 100%;
+            text-align: left;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            padding: 10px;
+        }
+
+        tfoot {
+            font-weight: bold;
+        }
+		.totalAmount span {font-weight:normal !important}
+		.invoice-second-div ul li{ padding-top:3px;}
+    </style>
+</head>
+
+<body>
+
+
+<div style="width:100%;background: lightgrey;border-top: 5px solid darkred;float: left;padding: 10px;margin-bottom: 13px;" class="invoice-main">
+            <img  width="180" src='. $logo .' />
+</div>
+ <br/>
+ <br/> 
+ <br/>
+ <br/>
+ <br/>
+ <br/>
+ <br/>
+ 
+<div style="width:100%;clear:both; padding:10px;" class="invoice-main">
+
+ <div style="float:left;width:50%;margin: 0px 0px 20px 0px;"><h3>'.$storename.'</h3>
+            <p>'.$storeaddress.'</p>
+            <p><label>GSTIN: '.$panNumber.'</label><span></span></p>
+            <p><label>PAN NO: '.$gstn.'</label><span></span></p>
+            <p><label>SAC NO: '.$sacNumber.'</label><span></span></p>
+ </div>
+ <div style="float:right; width50%" class="invoice-sub-main"> 
+            <ul>
+                <li><label>Financial Year: </label><span>'.$orderDateTime.'</span></li>
+                <li><label>Invoice No: </label><span>'.'RLFR/'.$invoiceYear.'/'.$inVoiceNumber.'</span></li>
+                <li><label>Date: </label><span>'.$inVoiceDate.'</span></li>
+            </ul>
+ </div>
+ </div>
+ 
+ <br/>
+ <br/> 
+ <br/>
+ <br/>
+ <br/>
+ <br/>
+ <br/> 
+ <br/>
+ <br/>
+ 
+
+ 
+   <div style="width:100%;clear:both;padding:10px;"  class="invoice-second-div">
+        <h3>Billing Details</h3>
+        <ul>
+            <li><label><b>Name:</b> </label><span>'.$storeOwnerName.'</span></li>
+            <li><label><b>Address:</b> </label><span>'.$storeStreetAddress.'</span></li>
+            <li><label><b>Transaction Id:</b> </label><span>'.$TransactionId.'</span></li>
+            <li><label><b>Order No:</b> </label><span>'.$orderid.'</span></li>
+            <li><label><b>GSTIN:</b> </label><span>'.$sellerGstin.'</span></li>
+            <li><label><b>PAN No:</b> </label><span>'.$sellerPan.'</span></li>
+        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>DESCRIPTION</th>
+                    <th>TAX</th>
+                    <th>PRODUCT BASE PRICE</th>
+					<th>AMOUNT</th>
+                </tr>
+            </thead>
+      
+            <tbody>
+                <tr>
+                    <td>Commission</td>
+                    <td>'.$commsionRate.'</td>
+                    <td>'.$productBaseprice.'</td>
+		    <td>'. $vendorAmount .'</td>
+                </tr>';
+
+$html .= $cgstcolumn;
+$html .= $sgstcolumn;
+$html .= $igstcolumn;
+$html .= '  </tbody>
+			      <tfoot>
+                <tr>
+                    <td>Gross Amount of Invoice</td>
+                    <td></td>
+                    <td></td>
+					<td>'. $grossAmountVal .'</td>
+                </tr>
+            </tfoot>
+        </table>
+        <p class="totalAmount"><label>Total Invoice value :  </label><span>'.$grossAmountVal.'</span></p>
+        <p class="totalAmount"><label>Total Invoice value : </label><span>'. $wordsTotStr.'</span></p>
+    </div>
+	
+
+
+	
+<div style="width:100%;clear:both; padding:10px; font-weight:bold; text-align:right">
+<p>'.$helper->getInvoicecompanyName().'</p>
+        <p>'.$helper->getInvoicecompanyAuthorName().'</p>
+        <p>Authorised Signatory</p>
+
+ </div>
+ </body>';
+
+$dompdf->load_html($html);
+$dompdf->render();
+//$dompdf->stream('RLFR-'.$invoiceYear."-".$inVoiceNumber.".pdf");
+$dompdf->stream('RLFR-'.$invoiceName."-".$inVoiceNumber);
+}
+die;

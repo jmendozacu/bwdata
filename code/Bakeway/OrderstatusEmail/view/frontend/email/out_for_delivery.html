@@ -1,0 +1,57 @@
+<!--
+/**
+ * Bakeway OrderstatusEmail.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_OrderstatusEmail
+ * @author    Bakeway
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<!--@subject  Your {{trans " %store_name" store_name=$store.getFrontendName()}} order no {{var myvar3}}  is ready and out for delivery.  @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name",
+"var business_name":"seller busines sname",
+"var phone_number":"seller phone number",
+"var business_name":"seller business name",
+"var product_name":"Product Name"
+} @-->
+<!--@styles
+ .email-content-details,.footer{line-height:23px; color:#555;}   
+@-->
+
+{{template config_path="design/email/header_template"}}
+
+<table class="email-content-details">
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">
+                {{if $myvar2}}
+                {{trans 'Hi'}}  {{trans "%customer_name," customer_name=$myvar2}}
+                {{else}}
+                {{trans 'Hi'}}  {{var guest_name}}
+                {{/if}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table>
+            <tr>
+              <td>
+                <p>Yay, your Bakeway <b>order no {{var myvar3}}</b> for <b>{{var product_name}}</b> is ready and out for delivery from our bakeway partner <b>{{var business_name}}</b>. 
+                Can’t wait for the party to get started? We can completely understand. You can expect the order to be delivered in just sometime.</p>
+                <p>Thank you for ordering from Bakeway.com. We’ll love to have you back. Looking forward to serving you again.</p>
+                <p>Have any queries or comments? Drop in an email at {{trans '<a href="mailto:%store_email">%store_email</a>.' store_email=$store_email |raw}} and we’ll be happy to help you with anything we can.</p>
+                </p>Have a Cakelicious day!</p>
+              </td>
+            </tr>
+            </table>
+        </td>
+      </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

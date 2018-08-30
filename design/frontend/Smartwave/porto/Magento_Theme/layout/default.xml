@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="logo">
+            <arguments>
+                <argument name="logo_img_width" xsi:type="number">111</argument>
+                <argument name="logo_img_height" xsi:type="number">50</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="footer" remove="true"/>
+        <referenceBlock name="report.bugs" remove="true"/>
+        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <referenceBlock name="wishlist_sidebar" remove="true"/>
+        <referenceBlock name="header.panel.wrapper" remove="true"/>
+        <referenceContainer name="sidebar.additional" remove="true"/>
+        <referenceContainer name="sidebar.main">
+            <referenceBlock name="customer_account_navigation" remove="true"/>
+        </referenceContainer>
+        <referenceContainer name="top.search" remove="true"/>
+        <referenceContainer name="page.top">
+            <referenceBlock name="sw.topnav" remove="false"/>
+        </referenceContainer>
+        <referenceContainer name="header-wrapper">
+            <referenceBlock name="minicart" remove="true"/>
+        </referenceContainer>
+        <referenceContainer name="head.components">
+            <referenceBlock name="checkout_page_head_components" remove="true"/>
+        </referenceContainer>
+        <referenceBlock name="top.links">
+            <referenceBlock name="wish-list-link" remove="true"/>
+            <referenceBlock name="marketplace-top-link" remove="true"/>
+            <referenceBlock name="header" remove="true"/>
+        </referenceBlock>
+        <referenceBlock name="customer_account_dashboard_address" remove="true"/>
+        <referenceContainer name="customer.login.container">
+            <referenceBlock name="customer.new" remove="true"/>
+        </referenceContainer>
+    </body>
+</page>

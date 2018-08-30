@@ -1,0 +1,42 @@
+<!--@subject {{var subject}}  @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var subject":"Email Subject",
+"var content":"Email Content"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p>
+               <h3>{{trans "This is to inform you."}}</h3>
+            </p>
+        </td>
+    </tr>
+    <tr class="email-summary">
+        <td>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table class="product-name">
+                <tr>
+                    <td class="product-details">
+                        <p><h3 style="color:darkblue">{{var subject}}.</h3></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="product-details">
+                        <p><h3 style="color:darkblue">{{trans "Seller Id"}} : {{var sellerId}}</h3></p>
+                        <p><h3 style="color:darkblue">{{trans "Business Name"}} :{{var sellerbusinessName}}</h3></p>
+                        <p><h3 style="color:darkblue">{{trans "City"}} : {{var cityName}}</h3></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

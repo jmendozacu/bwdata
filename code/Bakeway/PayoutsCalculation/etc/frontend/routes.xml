@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/framework/App/etc/routes.xsd">
+    <router id="standard">
+        <route id="payout" frontName="payout">
+            <module name="Bakeway_PayoutsCalculation"/>
+        </route>
+    </router>
+</config>

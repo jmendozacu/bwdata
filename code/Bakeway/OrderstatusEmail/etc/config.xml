@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <order>
+            <status>
+                <order_status_order_accpet_template>order_status_order_accpet_template</order_status_order_accpet_template>
+                <order_status_order_reject_template>order_status_order_reject_template</order_status_order_reject_template>
+                <order_status_out_for_delivery_email_template>order_status_out_for_delivery_email_template</order_status_out_for_delivery_email_template>
+                <order_status_ready_for_pickup_email_template>order_status_ready_for_pickup_email_template</order_status_ready_for_pickup_email_template>
+                <order_status_complete_email_template>order_status_complete_email_template</order_status_complete_email_template>
+                <order_status_notification_seller_email_template>order_status_order_status_notification_seller_email_template</order_status_notification_seller_email_template>
+            </status>
+        </order>
+        <invoice>
+            <pdf>
+                <comapny_name>For Relfor Labs</comapny_name>
+                <authorised_name>Test</authorised_name>
+                <store_name_invoice_pdf>Relfor Labs Pvt. Ltd.</store_name_invoice_pdf>
+             </pdf>
+        </invoice>        
+      </default>
+</config>

@@ -1,0 +1,44 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Customer\Block\Account\AuthorizationLink */
+$dataPostParam = '';
+if ($block->isLoggedIn()) {
+    $_helperObj = $this->helper('Webkul\Marketplace\Helper\Data')->getBakewayWelcomeMessage();
+    $dataPostParam = sprintf(" data-post='%s'", $block->getPostParams());
+    $Obj= \Magento\Framework\App\ObjectManager::getInstance();
+    $customerSession = $Obj->get('Magento\Customer\Model\Session');
+    if(!empty($_helperObj)){
+        $_WelcomeMsg = 'Welcome '.$_helperObj.", <br/>";  // get Seller shop title
+    }else{
+        $_WelcomeMsg = 'Welcome '.$customerSession->getCustomer()->getName().", <br/>";  // get  Full Name
+    }
+
+
+    ?>
+    <li>
+        <?php echo $_WelcomeMsg; ?>
+    </li>
+    <li>
+        <a href="<?php echo $block->getUrl('customer/account')?>">
+            <?php echo __('My Account') ?>
+        </a>
+    </li>
+    <li class="authorization-link" data-label="<?php echo $block->escapeHtml(__('or')); ?>">
+        <a <?php /* @escapeNotVerified */ echo $block->getLinkAttributes(); ?><?php /* @escapeNotVerified */ echo $dataPostParam; ?>>
+            <?php echo $block->escapeHtml($block->getLabel()); ?>
+        </a>
+    </li>
+<?php }else{?>
+    <li  class="authorization-link" data-label="<?php echo $block->escapeHtml(__('or')); ?>">
+        <a href="<?php echo $block->getUrl('customer/account/login')?>">
+            <?php echo __('Login') ?>
+        </a>
+    </li>
+
+<?php }?>

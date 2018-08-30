@@ -1,0 +1,482 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php $_order = $block->getOrder(); ?>
+<?php $seller = null; ?>
+<?php $bakeryName = "";?>
+<?php $bakeryName = $this->helper('Webkul\Marketplace\Helper\Data')->getBakeryNameFromOrder($_order->getEntityId());?>
+<?php
+$getStoreLocalityName = "";
+if($_order->getStoreUniqueName()){
+    $getStoreLocalityName = $block->getStoreLocalityfromStoreUniqueName($_order->getStoreUniqueName(),$_order->getEntityId());
+}
+?>
+<?php if ($_order): ?>
+    <?php
+    $discountAmount = abs($_order->getDiscountAmount());
+    ?>
+
+
+    <tr>
+        <td text-align="left" colspan="3">
+            <p><?php echo "Thank you for ordering on Bakeway.com. Your order id"?> <b><?php echo $_order->getRealOrderId() ?></b> <?php echo "has been confirmed and is placed with the ".$bakeryName.". Your order will"?>
+                be delivered at the mentioned address.</p>
+            <p>Looking forward to serve you.</p>
+        </td>
+    </tr>
+
+    <?php
+    $orderType = $_order->getData('delivery_type');
+    $orderTime = $_order->getData('delivery_time');
+    //$orderDateTime = date('D, M d, Y h A', strtotime($orderTime));
+    $orderDateTime = date('M d, Y',
+        strtotime($orderTime));
+    $orderDateFromTime = date('h:i A',
+        strtotime($orderTime));
+    $orderExtraDateTime = date('h:i A',
+        strtotime("+30 minutes", strtotime($orderTime)));
+    $userType = $_order->getData('customer_is_guest');
+
+    ?>
+    <table style="width:100%;margin-left: -3px;">
+
+    <tr height="80">
+        <td style="width:35%">
+            <?php if ($orderType == "home") : ?>
+                <span style="display: block;font-size: 14px;">
+                  <?= /* @escapeNotVerified */ __('Delivery Date & Time Slot:') ?>
+                        <b></b>
+                </span>
+            <?php else : ?>
+                <span style="display: block;font-size: 14px;">
+                   <?= /* @escapeNotVerified */ __('Pickup Time') ?>
+                        <b></b>
+            </span>
+            <?php endif; ?>
+
+
+            <label style="display: block;font-size: 15px;color: #080808;font-weight: bold;"><?= /* @escapeNotVerified */ $orderDateTime; ?></label>
+            <label style="display: block;font-size: 15px;color: #080808;font-weight: bold;"><?= /* @escapeNotVerified */ $orderDateFromTime . " - " . $orderExtraDateTime; ?></label>
+        </td>
+
+        <td style="width:35%">
+            <span style="display: block;font-size: 14px;">Bakery:</span>
+            <label style="display: block;font-size: 15px;color: #080808;font-weight: bold;">
+                <?php echo $bakeryName;?>
+                <?php if($_order->getStoreUniqueName()){
+                    echo ",";
+                }?>
+            </label>
+            <label style="display: block;font-size: 15px;color: #080808;font-weight: bold;">
+                <?php echo $getStoreLocalityName;?>
+            </label>
+        </td>
+
+        <?php if ($userType == 1) { ?>
+             <td>
+                <a href="<?= $block->getGuestTokenUrl() . '?token=' . $_order->getData('order_tracking_token') ?>"  style="border-radius:3px;text-decoration: none; padding: 10px 15px;background-color: #f9103d;border:0;color: #fff;font-size: 15px;font-weight:bold ">Track Your Order</a>
+            </td>
+         <?php } else { ?>
+            <td>
+                <a href="<?= $block->getGuestTokenUrl() . '?token=' . $_order->getData('order_tracking_token') ?>" type="button" style="border-radius:3px;text-decoration: none; padding: 10px 15px;background-color: #f9103d;border:0;color: #fff;font-size: 15px;font-weight:bold ">Track Your Order</a>
+            </td>
+        <?php } ?>
+
+     </tr>
+</table>
+
+    <?php $_items = $_order->getAllItems(); ?>
+    <table style="width:100%; border-collapse: collapse;">
+
+        <tr height="50px" bgcolor="#ececec" style="color: #080808;font-weight: bold;">
+            <td colspan="1" style="padding-left: 10px;"><?php echo __("Item Name")?></td>
+            <td colspan="1" style="padding-left: 10px;"><?php echo __("Image")?></td>
+            <td colspan="1" style="padding-left: 10px;"><?php echo __("Quantity")?></td>
+            <td colspan="1" style="padding-left: 10px;"><?php echo __("Price")?></td>
+
+        </tr>
+        <?php
+        $i = 1;
+        foreach ($_items as $_item):
+            ?>
+            <?php
+            if ($_item->getParentItem()) {
+                continue;
+            }
+            ?>
+
+
+            <?php
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $objProApi = $objectManager->create('\Bakeway\ProductApi\Model\VendorProductRepository');
+            $objPro = $objectManager->create('\Magento\Catalog\Api\ProductRepositoryInterface')->get($_item->getSku());
+            $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+            $variable = $objectManager->create('Magento\Variable\Model\Variable');
+            $bakewayPhone = $variable->loadByCode('support_bakeway_phone_no')->getPlainValue();
+            ?>
+
+
+            <tr height="50px" style="border-bottom: solid 1px #ccc;color: #080808;">
+                <td colspan="1" style="padding-left: 10px;">
+                    <?php echo $block->escapeHtml($_item->getName());?>
+
+
+                <?php if ($_item->getProductOptions()): ?>
+                    <?php $options = $_item->getProductOptions(); ?>
+                    <?php if (isset($options['attributes_info']) && !empty($options['attributes_info'])) { ?>
+                        <?php foreach ($options['attributes_info'] as $option): ?>
+
+                            ,<?php echo  nl2br($option['value']) ?>
+
+                        <?php endforeach; ?>
+                    <?php } else { ?>
+                        <?php
+                        $_CfLabel = $objProApi->getAttributeLabel($objPro,
+                            'cake_flavour');
+                        $_CiLabel = $objProApi->getAttributeLabel($objPro,
+                            'cake_ingredients');
+                        $_CwLabel = $objProApi->getAttributeLabel($objPro,
+                            'cake_weight');
+                        ?>
+                        <?php if (!empty($objPro->getAttributeText("cake_flavour"))): ?>
+                            <?= /* @escapeNotVerified */ nl2br($objPro->getAttributeText("cake_flavour")) ?>
+
+                        <?php endif; ?>
+
+
+                        <?php if (!empty($objPro->getAttributeText("cake_ingredients"))): ?>
+
+                            <?= /* @escapeNotVerified */ nl2br($objPro->getAttributeText("cake_ingredients")) ?>
+
+                        <?php endif; ?>
+
+                        <?php if (!empty($objPro->getAttributeText("cake_weight"))): ?>
+
+
+                            <?= /* @escapeNotVerified */ nl2br($objPro->getAttributeText("cake_weight")) ?>
+
+                        <?php endif; ?>
+
+
+
+                    <?php } ?>
+                <?php endif; ?>
+               </td>
+                <td colspan="1" style="padding-left: 10px;" width="130px">
+                    <img width="100" src="<?= $_item->getData('item_image_url') ?>"
+                         alt="image" title="image" />
+                </td>
+                <td colspan="1" style="padding-left: 10px;" width="70px">
+                    <?php echo number_format($_item->getQtyOrdered(),0);?>
+                </td>
+                <td colspan="1" style="padding-left: 10px;" width="130px">
+                    <?=
+                    /* @escapeNotVerified */ $priceHelper->currency($_item['base_row_total_incl_tax'],
+                        true, false);
+                    ?>
+                </td>
+
+            </tr>
+
+            <?php
+            $i++;
+        endforeach;
+    ?>
+
+
+            <tr height="50px">
+               <!-- <td colspan="1"></td>-->
+                <td colspan="4">
+                    <table  class="subtotal-table" style="float: right;padding-right: 62px;">
+                        <?php
+                        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                        $orderTax = $objectManager->create('\Magento\Sales\Model\Order\Tax')->getCollection()
+                            ->addFieldToFilter("order_id",
+                                array('eq' => $_order->getId()));
+                        ?>
+
+                        <tbody>
+                        <tr style="margin-bottom: 10px;">
+                            <td height="30px">
+                                  <span style="width:111px;color: #000;display: inline-block;text-align: left;">Cart Subtotal:</span>
+                                <b style="color: #000;"><?php
+                                    $taxVal = "";
+                                    if (!empty($_order['tax_amount'])):
+                                        ?>
+                                        <?php $taxVal = $_order['tax_amount'] ?>
+                                    <?php endif; ?>
+                                    <?php if (!empty($_order['subtotal'])): ?>
+                                    <span style="padding-left: 5px"> <?php echo $_order->formatPrice($_order['subtotal'] + $taxVal); ?></span>
+                                    <?php endif; ?>
+
+                        <?php $type = $_order->getData('delivery_type');?>
+                        <?php if (!empty($_order['base_shipping_amount']) && $type === 'home'): ?>
+                            <tr>
+                                <td height="30px">
+                                      <span style="width:111px;color: #000;display: inline-block;text-align: left;">Delivery fee:</span>
+                                <b style="color: #000;"><span style="padding-left: 5px"><?php echo $_order->formatPrice($_order['base_shipping_amount']) ?></span></b>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php
+                        if (!empty($orderTax)):
+                            foreach ($orderTax as $orderTaxVal):
+                                ?>
+                                <!--<tr>
+                                                                        <th colspan="2" scope="row"><?php echo $orderTaxVal['title'] ?> - <?php
+                                echo number_format($orderTaxVal['percent'], 0)
+                                ?>%</th>
+                                                                       <td><span class="price"><?php echo $_order->formatPrice($orderTaxVal['base_real_amount']) ?></span></td>
+                                                                    </tr> -->
+                                <?php
+                            endforeach;
+                        endif;
+                        ?>
+
+
+                        <?php if (!empty($_order['tax_amount'])): ?>
+                            <!-- <tr>
+                                                           <th colspan="2" scope="row">Tax</th>
+                                                            <td><span class="price"><?php echo $_order->formatPrice($_order['tax_amount']) ?></span></td>
+                                                        </tr>-->
+                        <?php endif; ?>
+
+                        <?php if (!empty($_order['fee'])): ?>
+                            <tr>
+                                <td height="30px">
+                                      <span style="width:111px;color: #000;display: inline-block;text-align: left;">Convenience fee:</span>
+                                    <b style="color: #000;"><span style="padding-left: 5px"><?php echo $_order->formatPrice($_order['fee']) ?></span></b>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if ($discountAmount > 0) : ?>
+                            <tr>
+                                <td height="30px">
+                                    <span style="width:111px;color: #000;display: inline-block;text-align: left;">Discount</span>
+                                <b style="color: #000;"><span style="padding-left: 5px"><?php echo $_order->formatPrice($discountAmount) ?></span></b>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <tr>
+                            <td height="30px">
+                                <span style="width:111px;color: #000;display: inline-block;text-align: left;">Grand Total:</span>
+                                <?php if (!empty($_order['base_grand_total'])): ?>
+                                <b><span class="price-grand-total" style="padding-left: 5px;"> <?php echo $_order->formatPrice($_order['base_grand_total']) ?></span></b>
+                                <?php endif; ?>
+
+                             </td>
+                        </tr>
+                        </tbody></table>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td colspan="4">
+                        <table style="border-collapse:collapse;color:#555; font-family:Arial, Helvetica, sans-serif">
+                        <tbody>
+
+                        <?php $customCakeMessage = $block->getCustomMessage($_order); ?>
+                        <?php if (!empty($customCakeMessage)): ?>
+                                <?php if (!empty($customCakeMessage[0])): ?>
+                                    <tr>
+                                        <td height="30px">
+                                            <?= /* @escapeNotVerified */ __('Message On the Cake:') ?> </td>
+                                        <td colspan="2">
+                                            <b><?php echo $customCakeMessage[0]; ?></b>
+                                        </td>
+
+                                    </tr>
+                                <?php endif; ?>
+                                <?php if (!empty($customCakeMessage[2])): ?>
+                                    <tr>
+                                        <td height="30px">
+                                           <?= /* @escapeNotVerified */ __('Message On Card:') ?></td>
+                                        <td colspan="2">
+                                            <b><?php echo $customCakeMessage[2] ?></b>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                                <?php if (!empty($customCakeMessage[1])): ?>
+                                    <tr>
+                                        <td height="30px">
+                                            <?= /* @escapeNotVerified */ __('Notes to Bakeries:') ?></td>
+                                        <td colspan="2">
+                                            <b><?php echo $customCakeMessage[1] ?></b>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+
+                        <?php endif; ?>
+
+                        <?php $photoImage = $block->getPhotoCakeImage($_order); ?>
+                        <?php if(isset($photoImage) && !empty($photoImage)): ?>
+                            <tr>
+
+                                            <td height="30px">
+                                                <?= /* @escapeNotVerified */ __('Photo On the Cake:') ?>
+                                            </td>
+                                            <td colspan="2">
+                                                <img src="<?php echo $photoImage?>" width="100" height="120" alt="Photo Cake" style="max-width: 100%;max-height: 30%;"/>
+                                            </td>
+                                        </tr>
+                            </tr>
+                        <?php endif;?>
+                        <!-- custom cake message-->
+
+                </tbody></table>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3" height="20px"></td>
+            </tr>
+
+            <!-- track address and delivery address-->
+
+                        <?php
+                        $orderType = $_order->getData('delivery_type');
+                        $orderTime = $_order->getData('delivery_time');
+                        $orderDateTime = date('M d, Y h:i A', strtotime($orderTime));
+                        $userType = $_order->getData('customer_is_guest');
+                        $seller = $block->getSellerInfo($objPro->getId(),$_order);
+                        ?>
+
+                    <?php if(!empty( $orderType)){ ?>
+                        <tr>
+                            <td colspan="2">
+                                <table width="100%">
+                                    <tbody>
+                                     <tr>
+                                        <td width="68%">
+                                    <?php if ($orderType == "home") : ?>
+                                            <b>Delivery Address</b>
+                                    <?php else:?>
+                                            <b>Pickup Address</b>
+                                    <?php endif;?>
+                                        </td>
+                                       <!--  <td width="50%">
+                                             <b>Landmark</b>
+                                         </td>-->
+                                     </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    <?php } ?>
+
+                        <tr>
+                            <td colspan="2">
+                                <table width="100%">
+                                    <tbody>
+                                    <tr>
+
+                            <?php if ($orderType == "home") : ?>
+                                <td width="68%" style="word-wrap: break-word;">
+                                    <?= $block->getDeliveryAddress($_order); ?>
+                                </td>
+<!--                                <td width="50%" style="word-wrap: break-word;">Gold Zym</td>
+-->                            <?php else : ?>
+                                <?php if ($seller !== null) { ?>
+                                    <td width="50%"  style="word-wrap: break-word;">
+                                        <div style="width:300px;font-size: 15px;font-weight: normal;">
+                                            <?= /* @escapeNotVerified */ $seller['business_name'] ?>
+                                            <br>
+                                               <?php if(!empty($seller['street_address'])){?>
+                                            <?= /* @escapeNotVerified */ $seller['street_address'] ?>
+                                                   <br>
+                                            <?php } ?>
+                                            <?= /* @escapeNotVerified */ $seller['phone_number'] ?>
+                                        </div>
+                                    </td>
+                                <?php } ?>
+                            <?php endif; ?>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+                        
+                        <tr>
+                            <td colspan="3" height="20px"></td>
+                        </tr>
+            <!-- track address and delivery address-->
+
+
+
+                        <!--sender address-->
+            <?php $billingAddress = $_order->getBillingAddress(); ?>
+            <?php if (!empty($billingAddress)): ?>
+                <tr>
+                    <td colspan="2">
+                        <table width="100%">
+                            <tbody><tr>
+                                <td width="50%">
+                                    <b>Sender Details</b>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                </tr>
+            <tr>
+                <td colspan="2">
+                    <table width="100%" class="order-emails-sender-information">
+                    <tbody>
+                       <tr>
+                            <?php if ($billingAddress->getFirstName()): ?>
+                              <p>Sender: <?php echo $billingAddress->getFirstName() . " " . $billingAddress->getLastName(); ?></p>
+                            <?php endif; ?>
+                            <?php if ($billingAddress->getEmail()): ?>
+                              <p> Email: <a href="mailto:<?php echo $billingAddress->getEmail(); ?>" target="_blank"><?php echo $billingAddress->getEmail(); ?></a></p>
+                            <?php endif; ?>
+                            <?php if ($billingAddress->getTelephone()): ?>
+                              <p>Contact: <a href="tel:+020-67475416" target="_blank"><?php echo $billingAddress->getTelephone() ?></a></p>
+                            <?php endif; ?>
+                         </tr>
+                     </tbody>
+                     </table>
+                </td>
+
+
+
+            </tr>
+        <br>
+           <?php endif; ?>
+
+
+
+
+
+
+    <?php
+    if ($this->helper('Magento\GiftMessage\Helper\Message')->isMessagesAllowed('order',
+                    $_order, $_order->getStore()) && $_order->getGiftMessageId()):
+        ?>
+        <?php $_giftMessage = $this->helper('Magento\GiftMessage\Helper\Message')->getGiftMessage($_order->getGiftMessageId()); ?>
+        <?php if ($_giftMessage): ?>
+            <br />
+            <table class="message-gift">
+                <tr>
+                    <td>
+                        <h3><?= /* @escapeNotVerified */ __('Gift Message for this Order') ?></h3>
+                        <strong><?= /* @escapeNotVerified */ __('From:'); ?></strong> <?= $block->escapeHtml($_giftMessage->getSender()) ?>
+                        <br /><strong><?= /* @escapeNotVerified */ __('To:'); ?></strong> <?= $block->escapeHtml($_giftMessage->getRecipient()) ?>
+                        <br /><strong><?= /* @escapeNotVerified */ __('Message:'); ?></strong>
+                        <br /><?= $block->escapeHtml($_giftMessage->getMessage()) ?>
+                    </td>
+                </tr>
+            </table>
+        <?php endif; ?>
+    <?php endif; ?>
+<?php endif; ?>
+<?php
+//die;?>

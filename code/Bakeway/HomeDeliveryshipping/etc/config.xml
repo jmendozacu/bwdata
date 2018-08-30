@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <bakewayhomedelivery>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>Bakeway\HomeDeliveryshipping\Model\Carrier</model>
+                <name>Bakeway home delivery Shipping</name>
+                <title>Bakeway home delivery Shipping</title>
+                <price>2.00</price>
+                <handling_type>F</handling_type>
+            </bakewayhomedelivery>
+        </carriers>
+        <free_shipping>
+            <free_shipping>
+                <home_bakers>1</home_bakers>
+            </free_shipping>
+            <free_shipping_of_seller>
+                <status>1</status>
+            </free_shipping_of_seller>
+        </free_shipping>
+    </default>
+</config>

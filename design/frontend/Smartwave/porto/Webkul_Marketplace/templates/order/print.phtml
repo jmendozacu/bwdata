@@ -1,0 +1,602 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+// @codingStandardsIgnoreFile
+?>
+<style>
+.account.page-print .order-details-items{padding:0px 11px;}
+.account.page-print .order-details-items{margin-bottom:9px;}
+.account.page-print .block-order-details-view .block-content .box,.account.page-print .account .column.main{margin-bottom:0px;}
+.account.page-print .block-order-details-view{margin:0px}
+.account.page-print .page-main{padding-bottom: 0px;}
+.account.page-print  address , .account.page-print .column.main{margin-bottom: 0px;}
+.navigation,.desktop_oititle_show{display:none;}
+.account.page-print .block .block-title{margin: 5px 0 0px;}
+@media (min-width: 412px) and (max-width: 691px){
+   .account.page-print  .box-order-shipping-address,.account.page-print  .box-order-shipping-method{width:50% !important; float:left}
+.desktop_oititle{display: none}
+.desktop_oititle_show{display:block;}
+.account.page-print .table{margin-bottom: 0px}
+.account.page-print .table tfoot>tr  th ,.account.page-print .table tfoot>tr td,
+.account.page-print .order-details-items .table-order-items tbody td,.account.page-print .order-details-items .col.name{padding-top:0px;padding-bottom:0px}
+.account.page-print .box .box-content{padding:0px;}
+.account.page-print .box .box-content{min-height: 0px;padding:7px;}
+}
+.account.page-print .copyright{display:none;}
+.account.page-print .box-title{font-weight: bold; color:#000;}
+.marketplace-order-printorder .box .box-title{padding:5px 16px !important }
+</style>
+<?php
+$helper = $this->helper('Webkul\Marketplace\Helper\Data');
+$orderHelper = $this->helper('Webkul\Marketplace\Helper\Orders');
+$payoutHelper = $this->helper('Bakeway\PayoutsCalculation\Helper\Data');
+$isPartner = $helper->isSeller();
+if ($isPartner == 1) {
+    $order_id = $this->getRequest()->getParam('id');
+    $order = $block->Order->load($order_id);
+    $orderStatusLabel = $order->getStatusLabel();
+    $paymentCode = '';
+    $payment_method = '';
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $getorderdata = $objectManager->create('\Magento\Sales\Api\OrderRepositoryInterface');
+    $orderData = $getorderdata->get($order_id);
+    if ($order->getPayment()) {
+        $paymentCode = $order->getPayment()->getMethod();
+        $payment_method = $order->getPayment()->getMethodInstance()->getTitle();
+    }
+
+    $marketplace_orders = $block->getSellerOrderInfo($order_id);
+    if (count($marketplace_orders)) {
+        $tracking = $orderHelper->getOrderinfo($order_id);
+        if ($tracking != "" && $paymentCode == 'mpcashondelivery') {
+            $codcharges = $tracking->getCodCharges();
+        }
+        $is_canceled = $tracking->getIsCanceled();
+        if ($is_canceled) {
+            $orderStatusLabel = 'Canceled';
+        }
+        ?>
+        <div class="wk_mp_design">
+            <div class="fieldset wk_mp_fieldset" id="wk_mp_print_order">
+                <div class="order-details-items ordered">
+                    <div class="order-title">
+                        <strong><?php echo __('Items Ordered') ?></strong>
+                    </div>
+                    <div class="table-wrapper order-items">
+                        <table class="data table table-order-items" id="my-orders-table" summary="<?php echo __('Items Ordered') ?>">
+                            <caption class="table-caption"><?php echo __('Items Ordered') ?></caption>
+                            <thead>
+                                <tr>
+                                    <th class="col name"><?php echo __('Product Name') ?></th>
+                                    <th class="col name"><?php echo __('Product Code') ?></th>
+                                    <th class="col sku"><?php echo __('SKU') ?></th>
+                                    <th class="col price"><?php echo __('Price') ?></th>
+                                    <th class="col qty"><?php echo __('Qty') ?></th>
+                                    <th class="col price"><?php echo __('Total Price') ?></th>
+                                    <?php if ($paymentCode == 'mpcashondelivery') { ?>
+                                        <th class="col price"><?php echo __('COD Charges') ?></th>
+                                        <?php }
+                                    ?>
+                                    <th class="col price"><?php echo __('Admin Commission') ?></th>
+                                    <th class="col price"><?php echo __('Vendor Total') ?></th>
+                                    <th class="col price"><?php echo __('Subtotal') ?></th>
+                                </tr>
+                            </thead>
+        <?php
+        $_items = $order->getItemsCollection();
+        $i = 0;
+        $_count = $_items->count();
+        $subtotal = 0;
+        $vendor_subtotal = 0;
+        $totaltax = 0;
+        $admin_subtotal = 0;
+        $admin_subtotal_excl_tax = 0;
+        $shippingamount = 0;
+        $couponamount = 0;
+        $codcharges_total = 0;
+        /**
+         * Bakeway Tax details variables
+         */
+        $commissionCgst = 0;
+        $commissionSgst = 0;
+        $commissionIgst = 0;
+        $commissionCgstPercent = 0;
+        $commissionSgstPercent = 0;
+        $commissionIgstPercent = 0;
+        foreach ($_items as $_item) {
+            $row_total = 0;
+            $available_seller_item = 0;
+            $shippingcharges = 0;
+            $couponcharges = 0;
+            $itemPrice = 0;
+            $seller_item_cost = 0;
+            $totaltax_peritem = 0;
+            $codcharges_peritem = 0;
+            $seller_item_commission = 0;
+            $orderid = $order_id;
+            $seller_orderslist = $block->getSellerOrdersList($orderid, $_item->getProductId(), $_item->getItemId());
+            $itemCommissionCgst = 0;
+            $itemComissionSgst = 0;
+            $itemCommissionIgst = 0;
+            foreach ($seller_orderslist as $seller_item) {
+                $parentitem_falg = 0;
+                $available_seller_item = 1;
+                $totalamount = $seller_item->getTotalAmount();
+                $seller_item_cost = $seller_item->getActualSellerAmount();
+                //$seller_item_commission = $seller_item->getTotalCommission();
+                $seller_item_commission_excl_tax = $seller_item->getTotalCommission();
+                $seller_item_commission = $seller_item->getCommissionInclTax();
+                $shippingcharges = $seller_item->getShippingCharges();
+                $couponcharges = $seller_item->getAppliedCouponAmount();
+                $itemPrice = $seller_item->getMageproPrice();
+                $totaltax_peritem = $seller_item->getTotalTax();
+                if ($paymentCode == 'mpcashondelivery') {
+                    $codcharges_peritem = $seller_item->getCodCharges();
+                }
+
+                /**
+                 * bakeway tax details
+                 */
+                $taxDetailsString = $seller_item->getCommissionTaxDetails();
+                $taxDetailsArr = unserialize($taxDetailsString);
+                $taxArrayCount = count($taxDetailsArr);
+                foreach ($taxDetailsArr as $taxDetails) {
+                    if (strtolower($taxDetails['label']) == strtolower('cgst')) {
+                        $itemCommissionCgst = $taxDetails[0]['value'];
+                        $commissionCgstPercent = $taxDetails[0]['percentage'];
+                    } elseif (strtolower($taxDetails['label']) == strtolower('sgst')) {
+                        $itemCommissionSgst = $taxDetails[0]['value'];
+                        $commissionSgstPercent = $taxDetails[0]['percentage'];
+                    } elseif (strtolower($taxDetails['label']) == strtolower('igst')) {
+                        $itemCommissionIgst = $taxDetails[0]['value'];
+                        $commissionIgstPercent = $taxDetails[0]['percentage'];
+                    }
+                }
+            }
+            if ($available_seller_item == 1) {
+                $i++;
+                $seller_item_qty = $_item->getQtyOrdered();
+                $row_total = $itemPrice * $seller_item_qty;
+
+                $vendor_subtotal = $vendor_subtotal + $seller_item_cost;
+                $subtotal = $subtotal + $row_total;
+                $admin_subtotal = $admin_subtotal + $seller_item_commission;
+                $admin_subtotal_excl_tax = $admin_subtotal_excl_tax + $seller_item_commission_excl_tax;
+                $commissionCgst = $commissionCgst + $itemCommissionCgst;
+                $commissionSgst = $commissionSgst + $itemCommissionSgst;
+                $commissionIgst = $commissionIgst + $itemCommissionIgst;
+                $totaltax = $totaltax + $totaltax_peritem;
+                $codcharges_total = $codcharges_total + $codcharges_peritem;
+                $shippingamount = $shippingamount + $shippingcharges;
+                $couponamount = $couponamount + $couponcharges;
+
+                $result = array();
+                if ($options = $_item->getProductOptions()) {
+                    if (isset($options['options'])) {
+                        $result = array_merge($result, $options['options']);
+                    }
+                    if (isset($options['additional_options'])) {
+                        $result = array_merge($result, $options['additional_options']);
+                    }
+                    if (isset($options['attributes_info'])) {
+                        $result = array_merge($result, $options['attributes_info']);
+                    }
+                }
+                ?>
+                                    <?php
+                                    if ($_item->getParentItem()) {
+                                        continue;
+                                    }
+                                    ?>
+                                    <tbody>
+                                        <tr class="border" id="order-item-row-<?php echo $_item->getId() ?>">
+                                            <td class="col name" data-th="<?php echo $block->escapeHtml(__('Product Name')); ?>">
+                                                <strong class="product name product-item-name"><?php echo $block->escapeHtml($_item->getName()) ?></strong>
+                                                    <?php if ($_options = $result): ?>
+                                                    <dl class="item-options">
+                                                        <?php foreach ($_options as $_option) : ?>
+                                                            <dt><?php echo $block->escapeHtml($_option['label']) ?></dt>
+                                                            <?php if (!$block->getPrintStatus()): ?>
+                                                                    <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+                                                                <dd<?php if (isset($_formatedOptionValue['full_view'])): ?> class="truncated"<?php endif; ?>>
+                                                                    <?php echo $block->escapeHtml($_option['value']) ?>
+                            <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                                                        <div class="truncated_full_value">
+                                                                            <dl class="item-options">
+                                                                                <dt><?php echo $block->escapeHtml($_option['label']) ?></dt>
+                                                                                <dd><?php echo $_formatedOptionValue['full_view'] ?></dd>
+                                                                            </dl>
+                                                                        </div>
+                                                                <?php endif; ?>
+                                                                </dd>
+                                                                <?php else: ?>
+                                                                <dd>
+                                                                <?php echo nl2br($block->escapeHtml((isset($_option['print_value']) ? $_option['print_value'] : $_option['value']))) ?>
+                                                                </dd>
+                                                            <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                    </dl>
+                <?php endif; ?>
+                                            </td>
+                                            <td class="col sku" data-th="<?php echo $block->escapeHtml(__('Product Code')); ?>"><?php echo $_item->getVendorProductCode(); ?></td>
+                                            <td class="col sku" data-th="<?php echo $block->escapeHtml(__('SKU')); ?>"><?php echo $_item->getSku() ?></td>
+                                            <td class="col price" data-th="<?php echo $block->escapeHtml(__('Price')); ?>"><?php echo $order->formatPrice($_item->getPrice()) ?></td>
+                                            <td class="col qty" data-th="<?php echo $block->escapeHtml(__('Qty')); ?>">
+                                                <ul class="items-qty">
+                <?php if ($_item->getQtyOrdered() > 0): ?>
+                                                        <li class="item">
+                                                            <span class="title"><?php echo __('Ordered'); ?></span>
+                                                            <span class="content"><?php echo $_item->getQtyOrdered() * 1 ?></span>
+                                                        </li>
+                                                    <?php endif; ?>
+                <?php if ($_item->getQtyShipped() > 0): ?>
+                                                        <li class="item">
+                                                            <span class="title"><?php echo __('Shipped'); ?></span>
+                                                            <span class="content"><?php echo $_item->getQtyShipped() * 1 ?></span>
+                                                        </li>
+                                                    <?php endif; ?>
+                <?php if ($_item->getQtyCanceled() > 0): ?>
+                                                        <li class="item">
+                                                            <span class="title"><?php echo __('Canceled'); ?></span>
+                                                            <span class="content"><?php echo $_item->getQtyCanceled() * 1 ?></span>
+                                                        </li>
+                                                    <?php endif; ?>
+                <?php if ($_item->getQtyRefunded() > 0): ?>
+                                                        <li class="item">
+                                                            <span class="title"><?php echo __('Refunded'); ?></span>
+                                                            <span class="content"><?php echo $_item->getQtyRefunded() * 1 ?></span>
+                                                        </li>
+                <?php endif; ?>
+                                                </ul>
+                                            </td>
+                                            <td class="col price" data-th="<?php echo $block->escapeHtml(__('Total Price')); ?>"><?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $row_total)); ?></td>
+                                            <?php if ($paymentCode == 'mpcashondelivery') { ?>
+                                                <td class="col price" data-th="<?php echo $block->escapeHtml(__('COD Charges')) ?>"><?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $codcharges_peritem)); ?></td>
+                                                <?php }
+                                            ?>
+                                            <td class="col price" data-th="<?php echo $block->escapeHtml(__('Admin Commission')); ?>"><?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $seller_item_commission)); ?></td>
+                                            <td class="col price" data-th="<?php echo $block->escapeHtml(__('Vendor Total')); ?>"><?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $seller_item_cost)); ?></td>
+                                            <td class="col subtotal" data-th="<?php echo $block->escapeHtml(__('Subtotal')); ?>"><?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $row_total)); ?></td>
+                                        </tr>
+                                    </tbody>
+                                    <?php
+                                }
+                            }
+                            ?>
+                            <?php
+                            $refundedShippingAmount = 0;
+                            $totalCouponAmount = 0;
+                            $totalTaxAmount = 0;
+                            $taxToSeller = $helper->getConfigTaxManage();
+                            /**
+                             * bakeway fields
+                             */
+                            $convenienceFee = 0;
+                            $tcsAmount = 0;
+                            $paymentGatewayAmount = 0;
+                            foreach ($marketplace_orders as $tracking) {
+                                $shippingamount = $tracking->getShippingCharges();
+                                $totalCouponAmount = $tracking->getCouponAmount();
+                                $totalTaxAmount = $tracking->getTotalTax();
+                                $refundedShippingAmount = $tracking->getRefundedShippingCharges();
+                                $taxToSeller = $tracking['tax_to_seller'];
+                                /**
+                                 * bakeway fields
+                                 */
+                                $convenienceFee = $tracking->getConvenienceFeeInclTax();
+                                $tcsAmount = $tracking->getTcsAmount();
+                                $paymentGatewayAmount = $tracking->getPaymentGatewayFee();
+                            }
+                            if ($paymentCode == 'mpcashondelivery') {
+                                $count_td = 8;
+                            } else {
+                                $count_td = 7;
+                            }
+                            ?>
+                            <tfoot>	        
+                                <tr class="subtotal">
+                                    <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                        <?php echo __('Subtotal') ?>
+                                    </th>
+                                    <td>
+                                <?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $subtotal)); ?>
+                                    </td>
+                                </tr>
+                               
+                                <?php
+                                /**
+                                 * Checking if tax is paid by bakeway
+                                 */
+                                $taxPaidByBakeway = $tracking->getData('tax_paid_by_bakeway');
+                                if ($taxPaidByBakeway == 1) {
+                                    $shippingamountExclTax = $payoutHelper->getDeliveryFeeExclTax($shippingamount);
+                                    ?>
+                                    <tr class="subtotal">
+                                        <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                            <?php echo __('Shipping & Handling Incl Tax') ?>
+                                        </th>
+                                        <td>
+            <?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $shippingamount)); ?>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <tr class="subtotal">
+                                        <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                            <?php echo __('Shipping & Handling') ?>
+                                        </th>
+                                        <td>
+                                    <?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $shippingamount)); ?>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
+                                 <tr>
+                                <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                    <?php echo __('Convenience Fee') ?>
+                                </th>
+                                <td>
+                                    <?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $convenienceFee)); ?>
+                                </td>
+                                </tr>
+                                <tr class="subtotal">
+                                    <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                        <?php echo __('Total Tax') ?>
+                                    </th>
+                                    <td>
+                                        <?php
+                                        echo $order->formatPrice($block->getOrderedPricebyorder($order, $totaltax));
+                                        $admintotaltax = 0;
+                                        $vendortotaltax = 0;
+                                        if (!$taxToSeller) {
+                                            $admintotaltax = $totaltax;
+                                        } else {
+                                            $vendortotaltax = $totaltax;
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                                        <?php if ($paymentCode == 'mpcashondelivery') { ?>
+                                    <tr class="subtotal">
+                                        <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                            <?php echo __('Total COD Charges') ?>
+                                        </th>							        
+                                        <td>
+                                    <?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $codcharges_total)); ?>
+                                        </td>
+                                    </tr>
+            <?php }
+        ?>
+                                
+                                <tr class="subtotal">
+                                    <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                        <strong><?php echo __('Total Ordered Amount') ?></strong>
+                                    </th>
+                                    <td>
+                                        <strong><?php echo $order->formatPrice($block->getOrderedPricebyorder($order, ($subtotal + $shippingamount + $codcharges_total + $totaltax + $convenienceFee - $totalCouponAmount))); ?></strong>
+                                    </td>
+                                </tr>
+        <?php if ($order->isCurrencyDifferent()) { ?>
+                                    <tr class="subtotal">
+                                        <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                            <strong><?php echo __('Total Ordered Amount(in base currency)') ?></strong>
+                                        </th>
+                                        <td>
+                                            <strong><?php echo $order->formatBasePrice($subtotal + $shippingamount + $codcharges_total + $totaltax + $convenienceFee - $totalCouponAmount); ?></strong>
+                                        </td>
+                                    </tr>
+                                        <?php } ?>
+                                    <tr style="display:none">
+                                    <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                        <?php echo __('TCS Fee') ?>
+                                    </th>
+                                    <td>
+        <?php echo $order->formatPrice($block->getOrderedPricebyorder($order, $tcsAmount)); ?>
+                                    </td>
+                                </tr>
+                                <?php
+                                /**
+                                 * Checking if tax is paid by bakeway
+                                 */
+                                $taxPaidByBakeway = $tracking->getData('tax_paid_by_bakeway');
+                                if ($taxPaidByBakeway == 1) {
+                                    $admintotaltax = $vendortotaltax;
+                                    $vendortotaltax = 0;
+                                    $shippingamount = $payoutHelper->getDeliveryFeeExclTax($shippingamount);
+                                }
+                                ?>
+                                        <?php if ($order->isCurrencyDifferent()) { ?>
+                                    <tr class="subtotal">
+                                        <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                            <?php echo __('Total Vendor Amount(in base currency)') ?>
+                                        </th>
+                                        <td>
+                                    <?php echo $order->formatBasePrice($vendor_subtotal + $shippingamount + $codcharges_total + $vendortotaltax - $refundedShippingAmount - $couponamount - $tcsAmount - $paymentGatewayAmount); ?>
+                                        </td>
+                                    </tr>
+                                        <?php } ?>
+                                  <?php if ($order->isCurrencyDifferent()) { ?>
+                                    <tr class="subtotal">
+                                        <th colspan="<?php echo $count_td ?>" class="mark" scope="row">
+                                            <?php echo __('Total Admin Commission(in base currency)') ?>
+                                        </th>
+                                        <td>
+                                    <?php echo $order->formatBasePrice($admin_subtotal + $admintotaltax); ?>
+                                        </td>
+                                    </tr>
+        <?php } ?>
+                                
+                          
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                
+                  <!--More Order Details start-->
+                <?php
+                $customMessage = $photoUrl = $timetext = "";
+                $extensionAtt = $order->getExtensionAttributes();
+                /* get items collection of current order */
+                $orderItemData = $orderData->getAllVisibleItems();
+                foreach ($orderItemData as $orderItems) {
+                    $customMessage = $orderItems->getData('extension_attributes')->getCustomMessage();
+                    $photoUrl = $orderItems->getData('extension_attributes')->getPhotoUrl();
+                }
+                ?>
+                <div class="order-details-items ordered" style="border:none">
+                 
+                    <div class="block-content">
+                        <div class="box-content">
+                            <div class="box">
+
+                                <?php
+                                if (!empty($photoUrl)):
+                                    ?>
+                                    <div class="wk-row">
+                                        <span class="label"><?php echo __('Photo Cake') ?> :  </span>
+                                        <span class="value"><img height=50px width="50px" src="<?php echo $photoUrl; ?>" title="<?php echo __('Photo Cake') ?>" /></span>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (!empty($customMessage)): ?>
+                                    <div class="wk-row">
+                                        <span class="label"><?php echo __('Message On Cake') ?> : </span>
+                                        <span class="value"><?php echo $customMessage; ?></span>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if (!empty($orderData->getCustomerNotes())): ?>
+                                    <div class="wk-row">
+                                        <span class="label"><strong><?php echo __('Notes to Bakeries') ?> :</strong>  </span>
+                                        <span class="value"><?php echo $orderData->getCustomerNotes(); ?></span>
+                                    </div>
+                                    <br>
+                                <?php endif; ?>
+                                <?php if (!empty($orderData->getStoreUniqueName())): ?>
+                                    <div class="wk-row">
+                                        <span class="label"><?php echo __('Store Name') ?> :  </span>
+                                        <span class="value"><?php echo $orderData->getStoreUniqueName(); ?></span>
+                                    </div
+                                <?php endif; ?>
+                                
+                                        </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--More Order Details end-->
+
+
+                
+        <?php if ($helper->getSellerProfileDisplayFlag()) { ?>
+                    <div class="block block-order-details-view">
+                       
+                       
+                        <div class="block-content">
+                       
+                               <?php if ($helper->getSellerProfileDisplayFlag()) { ?>
+            <?php if ($block->isOrderCanShip($order)): ?>
+                      
+                                                <div class="box box-order-shipping-address">
+                                    <strong class="box-title"><span><?php echo __('Shipping Address') ?></span></strong>
+                                    <div class="box-content">
+                                        <address><?php echo $block->getFormattedAddress($order->getShippingAddress()); ?></address>
+                                    </div>
+                                </div>
+
+                                <div class="box box-order-shipping-method" style="float:left !important">
+                                    <strong class="box-title">
+                                        <span><?php echo __('Shipping Method & Payment Method') ?></span>
+                                    </strong>
+                                    <div class="box-content">
+                                        <?php if ($order->getShippingDescription()): ?>
+                                        <strong> <?php echo __('Shipping Method : ');?></strong>   <?php echo $block->escapeHtml($order->getShippingDescription()) ?>
+                                        <?php else: ?>
+                    <?php echo __('No shipping information available'); ?>
+                                <?php endif; ?>
+                                        <strong> <?php echo __('Payment Method : ');?>  </strong>        <?php echo $payment_method; ?>
+
+                                    </div>
+                                </div>
+            <?php endif; ?>
+                     
+        <?php } ?>
+                                <div class="box box-order-shipping-address" style="margin-top:5px;float:left">
+                                    <strong class="box-title">
+                                        <span><?php echo __('Buyer Information') ?></span>
+                                    </strong>
+                                  <div class="box-content" style="min-height:84px;">
+                                    <div class="wk_row">
+                                        <span class="value"><?php echo $order->getCustomerName(); ?></span>
+                                    </div>
+                                    <div class="wk_row">
+                                        <span class="value"><?php echo $order->getCustomerEmail(); ?></span>
+                                    </div>
+                                      <div class="wk_row">
+                                      <label><b><?php echo __('T') ?> :</b> <?php echo $order->getBillingAddress()->getTelephone()?></label>
+                                     </div>
+                                  </div>
+                             </div>
+
+                            <!--new box -->
+                            <div class="box box-order-shipping-method" style="margin-top:5px;float: left;">
+                                <strong class="box-title">
+                                    <span><?php echo __('Delivery Information') ?></span>
+                                </strong>
+                                <div class="box-content" style="min-height:84px;">
+                                    <?php if (!empty($orderData->getDeliveryType())): ?>
+                                        <div class="wk-row">
+
+                                            <span class="label"><?php echo __('Delivery Type ') ?> : </span>
+                                            <?php if($orderData->getDeliveryType() == 'pickup'):?>
+                                                <?php $timetext = 'Pickup Up From Shop';?>
+                                            <?php else:?>
+                                                <?php $timetext = 'Delivery';?>
+                                            <?php endif;?>
+                                            <span class="value"><?php echo $timetext; ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (!empty($orderData->getDeliveryTime())): ?>
+                                        <div class="wk-row">
+                                            <?php if($orderData->getDeliveryType() == 'pickup'):?>
+                                                <?php $timetext = 'Pickup Time';?>
+                                            <?php else:?>
+                                                <?php $timetext = 'Delivery Time';?>
+                                            <?php endif;?>
+                                            <span class="label"><?php echo $timetext; ?> :   </span>
+                                        <span class="value">
+                                            <?php echo date("F d, Y h:i A", strtotime($order->getDeliveryTime()));?>
+</span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                </div>
+                            </div>
+                            <!--new box-->
+
+                             </div>
+                    </div>
+        <?php } ?>
+                
+           
+            </div>
+ 
+                   <!--More Order Details end-->
+        </div>
+        <?php
+    }
+}else {
+    ?>
+    <h2 class="wk_mp_error_msg">
+    <?php echo __("To Become Seller Please Contact to Admin."); ?>
+    </h2>
+    <?php }
+?>

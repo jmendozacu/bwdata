@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magento_Reports::report_sales_custom" title="Custom Reports" translate="title" module="Magento_Reports" sortOrder="40" parent="Magento_Reports::report" resource="Magento_Reports::salesroot"/>
+        <add id="Bakeway_Reports::report_custom_sales_orders" title="Order Details Reports" translate="title" module="Bakeway_Reports" sortOrder="10" parent="Magento_Reports::report_sales_custom" action="customreports/customer/orders" resource="Bakeway_Reports::report_custom_sales_orders"/>
+        <add id="Bakeway_Reports::report_custom_review_rating" title="Review and Rating Report" translate="title" module="Bakeway_Reports" sortOrder="20" parent="Magento_Reports::report_sales_custom" action="customreports/customer/reviews" resource="Bakeway_Reports::report_custom_review_rating"/>
+    </menu>
+</config>

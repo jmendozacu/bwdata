@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_ReviewRating
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../vendor/magento/framework/ObjectManager/etc/config.xsd">
+       <preference for="Magento\Review\Block\Adminhtml\Rating\Edit\Tab\Form" type="Bakeway\ReviewRating\Block\Adminhtml\Rating\Edit\Tab\Form" />
+       <preference for="Magento\Review\Controller\Adminhtml\Rating\Save" type="Bakeway\ReviewRating\Controller\Adminhtml\Rewrite\Rating\Save" />
+       <preference for="Magento\Review\Controller\Adminhtml\Rating\Index" type="Bakeway\ReviewRating\Controller\Adminhtml\Rewrite\Index" />
+       <preference for="Magento\Review\Block\Adminhtml\Edit\Form" type="Bakeway\ReviewRating\Block\Adminhtml\Rating\Edit\Form" />
+       <preference for="Magento\Review\Block\Adminhtml\Grid" type="Bakeway\ReviewRating\Block\Adminhtml\Rewrite\Grid" />
+
+       <preference for="Magento\Review\Model\ResourceModel\Review\Product\Collection" type="Bakeway\ReviewRating\Model\Rewrite\ResourceModel\Review\Product\Collection" />
+<preference for="Magento\Review\Block\Adminhtml\Rating\Summary" type="Bakeway\ReviewRating\Block\Adminhtml\Rewrite\Rating\Summary" />
+</config>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_Grabintigration
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_quote_load_after">
+        <observer name="grabintigration_quote_update" instance="Bakeway\GrabIntigration\Observer\UpdategrabcolumnsvalueToQuoteObserver" />
+    </event>
+    <event name="sales_order_place_after">
+        <observer name="bakeway_grab_flag_on_after_order" instance="Bakeway\GrabIntigration\Observer\SalesOrderPlaceAfter" />
+    </event>
+</config>

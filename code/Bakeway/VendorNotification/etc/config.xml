@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <vendor_app_settings>
+            <bakeway_vendor_notification>
+                <noti_ios_key>APNS</noti_ios_key>
+            </bakeway_vendor_notification>
+        </vendor_app_settings>
+       </default>
+</config>

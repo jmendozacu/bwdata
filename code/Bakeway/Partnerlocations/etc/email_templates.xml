@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway Partnerlocations.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_Partnerlocations
+ * @author    Bakeway
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="url_alert_url_changes_email_alert_template" label="Url Update Alert Email" file="url_changes_alert.html" type="html" module="Bakeway_Partnerlocations" area="frontend"/>
+</config>

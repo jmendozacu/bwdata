@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway
+ *
+ * @category  Bakeway
+ * @package   Bakeway_PartnerCatalogRule
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="partnercatalogrule" frontName="partnercatalogrule">
+            <module name="Bakeway_PartnerCatalogRule"/>
+        </route>
+    </router>
+</config>

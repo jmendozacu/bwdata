@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway
+ *
+ * @category  Bakeway
+ * @package   Bakeway_Crons
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+ <group id="default">
+    <job name="set_addon_availability" instance="Bakeway\Crons\Model\SetAddonAvailabilityCron" method="setAddonAvailability">
+        <schedule>* */1 * * *</schedule>
+    </job>
+    <job name="set_location_address_count" instance="Bakeway\Partnerlocations\Model\SyncOrderCount" method="SyncOrderCount">
+        <schedule>0 0 * * 0</schedule>
+    </job>
+     <job name="set_product_order_count" instance="Bakeway\ProductApi\Model\SyncProductCount" method="SyncProductCount">
+         <schedule>0 0 * * 0</schedule>
+     </job>
+     <job name="order_sms_email_push_noti_async" instance="Bakeway\Crons\Model\SetOrderEmailSmsPushNotificationTrigger" method="Trigger">
+         <schedule>*/1 * * * *</schedule>
+     </job>
+    </group>
+</config>

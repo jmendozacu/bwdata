@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Bakeway
+ * @package   Bakeway_PayoutsCalculation
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+     <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Bakeway_PayoutsCalculation::payoutscalculation" title="PayoutsCalculation" sortOrder="51">
+                    <resource id="Bakeway_PayoutsCalculation::payoutscalculation_configuration" title="Configuration" sortOrder="99" />
+                    <resource id="Bakeway_Import::bakeway_payoutsexport" title="Payoutsexport" sortOrder="100" />
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Bakeway_PayoutsCalculation::payoutscalculation_config" title="Configuration"/>
+                            <resource id="Bakeway_Import::bakeway_payout" title="Payoutsexport" />
+                       </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,267 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$cityHelper = $objectManager->create('\Bakeway\Cities\Helper\Data');
+?>
+<?php $city = $cityHelper->getCitiesOptionArray(); ?>
+
+<button title="DD NEW ADDRESS" id="add-location-add" class="button add location"  onClick ="addrecordPopup();" value="Add Row">
+    <span><span><span>ADD NEW ADDRESS</span></span></span>
+</button>
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <form>
+            <fieldset class="gllpLatlonPicker" style="border:none;">
+                <input type="text" class="gllpSearchField">
+                <input type="button" class="gllpSearchButton" value="search">
+                <div class="gllpMap" style="width: 500px; height: 250px;">Google Maps</div>
+                <input type="hidden" class="gllpLatitude" value="20"/>
+                <input type="hidden" class="gllpLongitude" value="20"/>
+                <input type="hidden" class="gllpZoom" value="3"/>
+                <input type="button" class="gllpUpdateButton" value="update map" style="display:none;">
+                <input type="button" class="setLatLon" value="Set Lat/Lon">
+            </fieldset>
+        </form>
+    </div>
+</div>
+<br>
+<br>
+<div id="location_popup_content" style="display: none">
+    <div class="entry-edit form-inline">
+        <fieldset class="fieldset admin__fieldset " id="page_base_fieldset">
+            <input id="seller_id" name="seller_id" value="<?php echo $block->getCustomerId(); ?>" type="hidden">
+            <div class="admin__field field field-city_id ">
+                <label class="label admin__field-label" for="tab_city_id"><span>City</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <select id="tab_city_id" name="city_id" title="City" class=" select admin__control-select" data-ui-id="locations-edit-edit-tab-main-fieldset-element-select-is-active">
+                        <?php
+                        foreach ($city as $cityData) {
+                            echo "<option value=" . $cityData['value'] . ">" . $cityData['label'] . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="admin__field field field-city_id suburb-main-div" style="display: none;">
+                <label class="label admin__field-label" for="tab_city_id"><span>Suburb</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <select style="display: none;" id="sub_loc_id" name="sub_loc_id" title="Suburb" class=" select admin__control-select" data-ui-id="locations-edit-edit-tab-main-fieldset-element-select-is-active">
+                    </select>
+                </div>
+            </div>
+            <div class="admin__field field field-meta_description " data-ui-id="locations-edit-edit-tab-main-fieldset-element-form-field-meta-description">
+                <label class="label admin__field-label" for="page_meta_description" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-meta-description-label"><span>Meta Description</span></label>
+                <div class="admin__field-control control">
+                    <textarea id="tab_meta_description" name="store_locality_meta_description" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-meta-description"  title="Meta Description" class="required-entry input-text admin__control-text"></textarea>
+                </div>
+            </div>
+            <div class="admin__field field field-store_latitude " data-ui-id="locations-edit-edit-tab-main-fieldset-element-form-field-store-latitude">
+                <label class="label admin__field-label" for="page_store_latitude" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-latitude-label"><span>Store Latitude</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <input id="tab_store_latitude" name="store_latitude" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-latitude"  title="Store Latitude" class="required-entry input-text admin__control-text" type="text">                            </div>
+            </div>
+
+            <div class="admin__field field field-store_longitude " data-ui-id="locations-edit-edit-tab-main-fieldset-element-form-field-store-longitude">
+                <label class="label admin__field-label" for="page_store_longitude" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-longitude-label"><span>Store Longitude</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <input id="page_store_longitude" name="store_longitude" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-longitude"  title="Store Longitude" class="required-entry input-text admin__control-text" type="text">                            </div>
+            </div>
+
+            <div class="admin__field field field-store_locality_area " data-ui-id="locations-edit-edit-tab-main-fieldset-element-form-field-store-locality-area">
+                <label class="label admin__field-label" for="page_store_locality_area" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-locality-area-label"><span>Locality</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <input id="page_store_locality_area" name="store_locality_area" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-locality-area"  title="Locality" class="required-entry input-text admin__control-text" type="text">                            </div>
+            </div>
+
+            <div class="admin__field field field-store_street_address " data-ui-id="locations-edit-edit-tab-main-fieldset-element-form-field-store-street-address">
+                <label class="label admin__field-label" for="page_store_street_address" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-street-address-label"><span>Store Address</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <input id="page_store_street_address" name="store_street_address" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-street-address" title="Store Address" class="required-entry input-text admin__control-text" type="text">                            </div>
+            </div>
+
+            <div class="admin__field field field-store_headline " data-ui-id="locations-edit-edit-tab-main-fieldset-element-form-field-store-headline">
+                <label class="label admin__field-label" for="page_store_headline" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-headline-label"><span>Store Headline</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <input id="page_store_headline" name="store_headline" data-ui-id="locations-edit-edit-tab-main-fieldset-element-text-store-headline"  title="Store Headline" class="required-entry input-text admin__control-text" type="text">                            </div>
+            </div>
+
+            <div class="admin__field field field-is_active " data-ui-id="locations-edit-edit-tab-main-fieldset-element-form-field-is-active">
+                <label class="label admin__field-label" for="page_is_active" data-ui-id="locations-edit-edit-tab-main-fieldset-element-select-is-active-label"><span>GRAB'S Status</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <select id="is_grab_active" name="is_grab_active" title="Status" class=" select admin__control-select" data-ui-id="locations-edit-edit-tab-main-fieldset-element-select-is-active">
+                        <option value="1" selected="selected">Enabled</option>
+                        <option value="0">Disabled</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="admin__field field field-is_active " data-ui-id="locations-edit-edit-tab-main-fieldset-element-form-field-is-active">
+                <label class="label admin__field-label" for="page_is_active" data-ui-id="locations-edit-edit-tab-main-fieldset-element-select-is-active-label"><span>Status</span><span style="color: indianred;">*</span></label>
+                <div class="admin__field-control control">
+                    <select id="page_is_active" name="is_active" title="Status" class=" select admin__control-select" data-ui-id="locations-edit-edit-tab-main-fieldset-element-select-is-active">
+                        <option value="1" selected="selected">Enabled</option>
+                        <option value="0">Disabled</option>
+                    </select>
+                </div>
+            </div>
+
+            <button title="SUBMIT" id="add-location-add" class="button add location"  onclick="addrecordajax()" value="Add Row">
+                <span><span><span>SUBMIT</span></span></span>
+            </button>
+            <button id="myBtn" style="width: 220px;left: 15px;position: relative;">Open Map To Select Lat/Lon</button>
+        </fieldset>
+
+    </div>
+</div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    function addrecordPopup() {
+        require(
+                [
+                    'jquery',
+                    'Magento_Ui/js/modal/modal'
+                ],
+                function ($,
+                        modal) {
+                    var options = {
+                        type: 'popup',
+                        responsive: true,
+                        innerScroll: true,
+                        title: 'New Address',
+
+                    };
+
+                    var popup = modal(options, $('#location_popup_content'));
+
+                    $('#location_popup_content').modal(options).modal('openModal');
+                    $('.modal-footer').hide();
+
+                }
+        );
+    }
+    /**suburb list**/
+    jQuery("#tab_city_id").change(function () {
+
+        var city_id = document.getElementById('tab_city_id').value;
+        new Ajax.Request('<?php
+                        echo $this->getUrl('partnerlocations/locations/suburblist',
+                                ['_secure' => true]);
+                        ?>', {
+            method: 'post',
+            dataType: "json",
+            parameters: {
+                city_id: city_id,
+            },
+            onSuccess: function (transport) {
+                if (transport.responseJSON.length == 0) {
+                    jQuery("#sub_loc_id,.suburb-main-div").hide();
+                } else {
+                    jQuery("#sub_loc_id,.suburb-main-div").show();
+                    var suburbHtml = '<select id="sub_loc_id" name="sub_loc_id" title="Suburb" class=" select admin__control-select"><option value="">---Please Select---</option>' + transport.responseJSON + '</select>';
+                    jQuery('#sub_loc_id').replaceWith(suburbHtml);
+                }
+            }
+        });
+
+    });
+    var seller_id = city_id = store_latitude = store_longitude = store_locality_area = store_street_address = store_headline = is_active = "";
+
+
+
+    function addrecordajax() {
+        var seller_id = document.getElementById('seller_id').value;
+        var city_id = document.getElementById('tab_city_id').value;
+        var sub_loc_id = document.getElementById('sub_loc_id').value;
+        var store_latitude = document.getElementById('tab_store_latitude').value;
+        var store_longitude = document.getElementById('page_store_longitude').value;
+        var store_locality_area = document.getElementById('page_store_locality_area').value;
+        var store_street_address = document.getElementById('page_store_street_address').value;
+        var store_headline = document.getElementById('page_store_headline').value;
+        var is_active = document.getElementById('page_is_active').value;
+        var is_grab_active = document.getElementById('is_grab_active').value;
+        var meta_description = document.getElementById('tab_meta_description').value;
+        /* validation*/
+        if (city_id == "")
+        {
+            alert("City is required Field");
+            return false;
+        }
+        if (sub_loc_id == "")
+        {
+            alert("Suburb is required Field");
+            return false;
+        }
+        if (store_latitude == "")
+        {
+            alert("Store latitude is required Field");
+            return false;
+        }
+
+
+        if (store_longitude == "")
+        {
+            alert("Store longitude is required Field");
+            return false;
+        }
+
+        if (store_locality_area == "")
+        {
+            alert("Store locality area is required Field");
+            return false;
+        }
+
+        if (store_street_address == "")
+        {
+            alert("City is required Field");
+            return false;
+        }
+
+        if (is_active == "")
+        {
+            alert("Status is required Field");
+            return false;
+        }
+
+
+        new Ajax.Request('<?php
+                        echo $this->getUrl('partnerlocations/locations/save',
+                                ['_secure' => true]);
+                        ?>', {
+            method: 'post',
+            dataType: "json",
+            parameters: {
+                seller_id: seller_id,
+                city_id: city_id,
+                sub_loc_id: sub_loc_id,
+                store_latitude: store_latitude,
+                store_longitude: store_longitude,
+                store_locality_area: store_locality_area,
+                store_street_address: store_street_address,
+                store_headline: store_headline,
+                is_active: is_active,
+                is_grab_active: is_grab_active,
+                store_locality_meta_description: meta_description
+            },
+            onSuccess: function (transport) {
+                //location.reload();
+                window.location = "<?php
+                        echo $this->getUrl('customer/index/edit/',
+                                array('id' => $block->getCustomerId(), '_current' => true, 'mode' => 'localtion_save_target'));
+                        ?>"
+            }
+        });
+    }
+
+
+
+
+</script>
+
+<?php echo $block->getChildHtml('gridlocations'); ?>

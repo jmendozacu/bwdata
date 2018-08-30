@@ -1,0 +1,7 @@
+<form action="<?php echo $this->getFormAction();?>" method="post" enctype="multipart/form-data" name="reviewUpload">
+    <div><input name="form_key" type="hidden" value="<?php /* @escapeNotVerified */ echo $block->getFormKey() ?>" /></div>
+    <input type="file" name="reviewfile" id="reviewfile">
+    <button type="submit" title="Save" id="save-data" class="button" value="import">
+        <span><span><span>Save</span></span></span>
+    </button>
+</form>

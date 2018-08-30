@@ -1,0 +1,144 @@
+<?php
+
+$orderId = $this->getRequest()->getParam('id');
+
+if(!isset($orderId)){
+    echo __("No Input Found For This Order");
+}
+
+if(isset($orderId)){
+
+?>
+    <?php
+    /**
+     * Webkul Software.
+     *
+     * @category  Webkul
+     * @package   Webkul_Marketplace
+     * @author    Webkul
+     * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+     * @license   https://store.webkul.com/license.html
+     */
+// @codingStandardsIgnoreFile
+
+    $helper = $this->helper('Webkul\Marketplace\Helper\Data');
+    $orderHelper = $this->helper('Webkul\Marketplace\Helper\Orders');
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $bakewayOrderStatus = $objectManager->create('Bakeway\Vendorapi\Model\OrderStatus');
+    $order_id = $this->getRequest()->getParam('id');
+    $getorderdata = $objectManager->create('\Magento\Sales\Model\Order');
+    $order = $getorderdata->load($order_id);
+    $orderData = $getorderdata->load($order_id);
+    $_items = $order->getItemsCollection();
+    $objProApi = $objectManager->create('\Bakeway\ProductApi\Model\VendorProductRepository');
+
+    $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
+        ->getStore()
+        ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+    ?>
+    <section class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title">Items Ordered</span>
+        </div>
+        <div class="admin__table-wrapper">
+            <table class="data-table admin__table-primary edit-order-table">
+                <thead>
+                <tr class="headings">
+                    <th class="col-product"><span>Product Name</span></th>
+                    <th class="col-status"><span>Product Sku</span></th>
+                    <th class="col-status"><span>Product Image</span></th>
+                    <th class="col-status"><span>Product Flavour</span></th>
+
+                    <th class="col-status"><span>Weight of Product</span></th>
+                    <th class="col-status"><span>Ingredients</span></th>
+                </tr>
+                </thead>
+                <?php
+    foreach ($_items as $_item)
+    {
+
+        if ($_item->getParentItem()) {
+            continue;
+        }
+        try {
+            $getSku = $_item->getSku();
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e){
+            $getSku = false;
+        }
+
+        if(!empty($getSku)){
+
+           ?>
+
+            <tr>
+                <td> <?php echo $block->escapeHtml($_item->getName()) ?></td>
+                <td> <?php echo $block->escapeHtml($getSku) ?></td>
+                <td><img src="<?php echo $_item['item_image_url'];?>" /></td>
+                    <?php if(!empty($_item["item_flavour"])):?>
+                        <td><?= /* @escapeNotVerified */  nl2br($_item["item_flavour"]) ?></td>
+                    <?php endif;?>
+
+                    <?php if(!empty($_item["item_ingredient"])):?>
+                        <td><?= /* @escapeNotVerified */  nl2br($_item["item_ingredient"]) ?></td>
+                    <?php endif;?>
+
+                    <?php if(!empty($_item["item_weight"])):?>
+                    <td><?= /* @escapeNotVerified */  nl2br($_item["item_weight"]) ?></td>
+                    <?php endif;?>
+
+
+            </tr>
+
+
+
+<?php
+    }  }?>
+            </table>
+        </div>
+
+        <?php
+        $customMessage = [];
+        $orderItemData = $orderData->getAllVisibleItems();
+        foreach ($orderItemData as $orderItems) {
+            $customMessage[] = $orderItems->getData('extension_attributes')->getCustomMessage();
+        }
+        ?>
+        <?php if (!empty($customMessage[0])): ?>
+            <p class="col3" style="width: 100%;">
+                <strong style="font-size:15px"><?php echo __('Message On the Cake') ?> : </strong>
+                <span><?php echo $customMessage[0]; ?></span>
+
+            </p>
+        <?php endif; ?>
+        <br>
+            <?php if (!empty($orderData->getDeliveryType())): ?>
+                <p class="col3">
+
+                    <strong><?php echo __('Sender Information') ?> :</strong>
+                    </br>
+                    <label><b><?php echo __('Customer Name') ?> :</b> <?php echo $order->getCustomerName(); ?></label>
+                    <br><label><b><?php echo __('Email') ?> :</b> <?php echo $order->getCustomerEmail(); ?></label>
+                    <br><label><b><?php echo __('T') ?> :</b> <?php echo $order->getBillingAddress()->getTelephone()?></label>
+
+                </p>
+            <?php endif; ?>
+    <br>
+
+        <?php if (!empty($orderData->getShippingAddress())): ?>
+            <p class="col3">
+
+                <strong><?php echo __('Delivery Information') ?> :</strong>
+                </br>
+                <label><b><?php echo __('Delivery Person Name') ?> :</b> <?php echo $orderData->getShippingAddress()->getName()?></label>
+                <br><label><b><?php echo __('Email') ?> :</b> <?php echo $orderData->getShippingAddress()->getEmail()?></label>
+                <br><label><b><?php echo __('T') ?> :</b> <?php echo $orderData->getShippingAddress()->getTelephone()?></label>
+
+            </p>
+        <?php endif; ?>
+
+
+    </section>
+<?php
+}
+?>

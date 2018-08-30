@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2018. Relfor
+  ~ Created By: Ashish Ranade On : 30/4/18 3:29 PM
+  ~ Project: bakeway
+  ~ File: C:/xampp/htdocs/bakeway/app/code/Bakeway/GstReport/etc/adminhtml/routes.xml
+  ~ Updated At: 25/4/18 10:49 AM
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="gstreports" frontName="gstreports">
+            <module name="Bakeway_GstReport"/>
+        </route>
+    </router>
+</config>

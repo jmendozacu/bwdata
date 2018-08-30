@@ -1,0 +1,97 @@
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<!--@subject Product Disapproved Notification  @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name"
+} @-->
+
+<!--@styles 
+.email-information ,.email-intro p,.footer p{ font-size:16px; }
+.product-details .pro-image{ float: left;line-height: 78px;}
+.product-details img{ vertical-align: center; text-align: right;}
+@-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Hi,"}}</p>
+	    <p>
+                {{trans "Please take a note."}}
+            </p>
+            <p>
+                {{trans "Below product has been disapproved."}}
+            </p>
+        </td>
+    </tr>
+
+    <tr class="email-summary">
+        <td>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table class="product-name">
+                <tr>
+
+                    <td class="product-details">
+                        <p>{{trans "Seller Id"}} : {{var sellerId|raw}}</p>
+                    </td>
+		</tr>
+                    
+		 <tr>
+			<td class="product-details">
+                        <p>{{trans "Seller Name"}} : {{var myvar5|raw}}</p>
+                        </td>
+		</tr>
+
+        <tr>
+            <td class="product-details">
+                <p> {{trans "Business Name"}} : {{var sellerbusinessName|raw}}</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="product-details">
+                <p>{{trans "City"}} : {{var cityName|raw}}</p>
+            </td>
+        </tr>
+
+	         <tr>                   
+			<td class="product-details">
+                        <p>{{trans "Product Name"}} : {{var myvar1|raw}}</p>
+                        </td>
+
+		 </tr>
+
+
+                <tr>
+                    <td class="product-details">
+                        <p>{{trans "Product Sku"}} : {{var sku|raw}}</p>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+                        <td class="product-details">
+                         <p class="pro-image">{{trans "Product Image"}} :</p> <img src="{{var myvar8|raw}}" height=80 width =80 /></p>
+                       </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

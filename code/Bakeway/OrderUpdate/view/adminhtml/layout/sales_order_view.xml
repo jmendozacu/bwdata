@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="left">
+          <referenceBlock name="sales_order_tabs">
+                <!--note: dont change these tab position-->
+                 <action method="addTab">
+                      <argument name="name" xsi:type="string">order_info</argument>
+                      <argument name="block" xsi:type="string">order_tab_info</argument>
+                 </action>
+                 <action method="addTabAfter">
+                      <argument name="name" xsi:type="string">order_extra_details</argument>
+                      <argument name="block" xsi:type="string">Bakeway\OrderUpdate\Block\Adminhtml\Order\View\Tab\Extrainfo</argument>
+                      <argument name="after" xsi:type="string">order_info</argument>
+                  </action>
+          </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Bakeway\CatalogSync\Block\Adminhtml\Sync\Index" name="catalog_sync" template="sync/index.phtml">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

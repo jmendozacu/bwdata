@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway
+ *
+ * @category  Bakeway
+ * @package   Bakeway_PartnerCatalogRule
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="adminhtml_customer_save_after">
+        <observer name="bakeway_partnercatalogrule_adminhtml_customer_save_after_observer" instance="Bakeway\PartnerCatalogRule\Observer\AdminhtmlCustomerSaveAfterObserver" />
+    </event>
+    <event name="magento_catalogrule_api_data_ruleinterface_save_after">
+        <observer name="bakeway_partnercatalogrule_catalog_rule_save_after" instance="Bakeway\PartnerCatalogRule\Observer\CatalogRuleSaveAfter" />
+    </event>
+</config>

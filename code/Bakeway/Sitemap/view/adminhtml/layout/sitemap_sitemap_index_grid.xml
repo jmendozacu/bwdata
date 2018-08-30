@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="sitemap.sitemap.index.grid.container">
+            <block class="Magento\Backend\Block\Widget\Grid" name="bakeway.sitemap.container.grid" as="grid">
+                <arguments>
+                    <argument name="id" xsi:type="string">sitemapGrid</argument>
+                    <argument name="dataSource" xsi:type="object">Bakeway\Sitemap\Model\ResourceModel\Sitemap\Collection</argument>
+                    <argument name="default_sort" xsi:type="string">id</argument>
+                </arguments>
+                <block class="Magento\Backend\Block\Widget\Grid\ColumnSet" name="bakeway.sitemap.container.grid.columnSet" as="grid.columnSet">
+                    <!--<arguments>-->
+                        <!--<argument name="id" xsi:type="string">sitemapGrid</argument>-->
+                        <!--<argument name="rowUrl" xsi:type="array">-->
+                            <!--<item name="path" xsi:type="string">*/*/edit</item>-->
+                            <!--<item name="extraParamsTemplate" xsi:type="array">-->
+                                <!--<item name="sitemap_id" xsi:type="string">getId</item>-->
+                            <!--</item>-->
+                        <!--</argument>-->
+                    <!--</arguments>-->
+                    <block class="Magento\Backend\Block\Widget\Grid\Column" as="id">
+                        <arguments>
+                            <argument name="header" xsi:type="string" translate="true">ID</argument>
+                            <argument name="index" xsi:type="string">id</argument>
+                            <argument name="column_css_class" xsi:type="string">col-id</argument>
+                            <argument name="header_css_class" xsi:type="string">col-id</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Widget\Grid\Column" as="filename">
+                        <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Filename</argument>
+                            <argument name="index" xsi:type="string">filename</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Widget\Grid\Column" as="filepath">
+                        <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Path</argument>
+                            <argument name="index" xsi:type="string">filepath</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Widget\Grid\Column" as="link">
+                        <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Link for Google</argument>
+                            <argument name="renderer" xsi:type="string">Bakeway\Sitemap\Block\Adminhtml\Grid\Renderer\Link</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Widget\Grid\Column" as="created_at">
+                        <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Last Generated</argument>
+                            <argument name="index" xsi:type="string">created_at</argument>
+                            <argument name="type" xsi:type="string">datetime</argument>
+                            <argument name="column_css_class" xsi:type="string">col-date</argument>
+                            <argument name="header_css_class" xsi:type="string">col-date</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Widget\Grid\Column" as="action">
+                        <arguments>
+                            <argument name="header" xsi:type="string" translate="true">Action</argument>
+                            <argument name="filter" xsi:type="string">0</argument>
+                            <argument name="sortable" xsi:type="string">0</argument>
+                            <argument name="renderer" xsi:type="string">Bakeway\Sitemap\Block\Adminhtml\Grid\Renderer\Action</argument>
+                        </arguments>
+                    </block>
+                </block>
+            </block>
+            </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Bakeway_GstReport::manage_gstreports" title="GST Reports" translate="title" module="Bakeway_GstReport"
+             sortOrder="100" resource="Bakeway_GstReport::manage_gstreports"
+             parent="Magento_Reports::report"/>
+        <add id="Bakeway_GstReport::manage_gstreports_registered" title="Registered Reports" translate="title"
+             module="Bakeway_GstReport"
+             parent="Bakeway_GstReport::manage_gstreports" sortOrder="100" action="gstreports/registered/index"
+             resource="Bakeway_GstReport::manage_gstreports"/>
+        <add id="Bakeway_GstReport::manage_gstreports_unregistered" title="Unregistered Reports" translate="title"
+             module="Bakeway_GstReport"
+             parent="Bakeway_GstReport::manage_gstreports" sortOrder="100" action="gstreports/unregistered/index"
+             resource="Bakeway_GstReport::manage_gstreports"/>
+        <add id="Bakeway_GstReport::manage_seller_reports" title="Seller Report" translate="title"
+             module="Bakeway_GstReport"
+             parent="Magento_Reports::report_salesroot" sortOrder="100" action="gstreports/seller/report"
+             resource="Bakeway_GstReport::manage_gstreports"/>
+        <add id="Bakeway_GstReport::manage_icici_audit_report" title="ICICI Audit Report" translate="title"
+             module="Bakeway_GstReport"
+             parent="Magento_Reports::report_salesroot" sortOrder="200" action="gstreports/icici/audit"
+             resource="Bakeway_GstReport::manage_gstreports"/>
+    </menu>
+</config>

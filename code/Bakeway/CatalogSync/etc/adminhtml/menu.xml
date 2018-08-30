@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Bakeway_CatalogSync::catalog_sync_tab" title="Sync Product Catalog" translate="title" module="Bakeway_CatalogSync" sortOrder="40" parent="Magento_Catalog::inventory" resource="Bakeway_CatalogSync::catalogsync"/>
+        <add id="Bakeway_CatalogSync::catalog_sync" title="Catalog Sync" translate="title" module="Bakeway_CatalogSync" sortOrder="20" parent="Bakeway_CatalogSync::catalog_sync_tab" action="catalogsync/sync/index" resource="Bakeway_CatalogSync::catalog_sync"/>
+    </menu>
+</config>

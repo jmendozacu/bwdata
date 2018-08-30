@@ -1,0 +1,32 @@
+<?php
+$object_manager = \Magento\Framework\App\ObjectManager::getInstance();
+$dir = $object_manager->get('Magento\Store\Model\StoreManagerInterface');
+$storeManager = $object_manager->get('Magento\Store\Model\StoreManagerInterface');
+/** @var \Magento\Store\Api\Data\StoreInterface|\Magento\Store\Model\Store $currentStore */
+$currentStore = $storeManager->getStore();
+$mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+
+<div class="import-export-tax-rates">
+    <div class="import-tax-rates">
+        <?php if ($block->getUseContainer()): ?>
+        <form id="sync" class="admin__fieldset" action="<?php /* @escapeNotVerified */
+        echo $block->getUrl('sitemap/sitemap/generate') ?>" method="post" enctype="multipart/form-data">
+            <?php endif; ?>
+            <?php echo $block->getBlockHtml('formkey') ?>
+            <div class="fieldset admin__field">
+                <label for="export_product_feed_file" class="admin__field-label"><span><?php /* @escapeNotVerified */
+                        echo __('Generate Sitemap') ?></span></label>
+                <div class="admin__field-control">
+                    <input type="submit" value="Generate"/>
+                </div>
+            </div>
+            <?php if ($block->getUseContainer()): ?>
+        </form>
+        <?php endif; ?>
+
+    </div>
+    <div>
+        <?php echo $block->getChildHtml('sitemap.sitemap.index.grid.container') ?>
+    </div>
+</div>

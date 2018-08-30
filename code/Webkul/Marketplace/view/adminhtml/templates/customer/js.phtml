@@ -1,0 +1,242 @@
+<div id="messages" class="success_profile_msg" style="display:none;margin-bottom:0px;margin-top:2px;">
+    <div class="messages">
+        <div class="message message-success success">
+            <div data-ui-id="messages-message-success">
+                <?php echo __("Shop name is available."); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="messages" class="error_profile_msg" style="display:none;margin-bottom:0px;margin-top:2px;">
+    <div class="messages">
+        <div class="message message-error error">
+            <div data-ui-id="messages-message-error">
+                <?php echo __("Shop name is already exists."); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    require([
+        "jquery",
+        "mage/mage",
+        "prototype"
+
+    ], function ($) {
+        $("input[type='file']").attr('form', 'customer_form');
+        $("#marketplace_profileurl").keyup(function () {
+            $(this).val($(this).val().replace(/[^a-z^A-Z^0-9\.\-]/g, ""));
+        });
+        $("#marketplace_profileurl").on('change', function () {
+            $('.success_profile_msg').hide();
+            $('.error_profile_msg').hide();
+            var profileurl = $(this).val();
+            var self = $(this);
+            if (profileurl != '') {
+                new Ajax.Request('<?php echo $block->getAjaxCheckUrl() ?>', {
+                    method: 'post',
+                    parameters: {profileurl: profileurl},
+                    onSuccess: function (transport) {
+                        console.log(transport.responseJSON);
+                        if (transport.responseJSON == 0) {
+                            self.after($('.success_profile_msg').show());
+                        } else {
+                            self.after($('.error_profile_msg').show());
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script>
+    require([
+        "jquery",
+        "mage/adminhtml/form",
+        "mage/calendar"
+    ], function ($) {
+        $(".field-userdata_brand").hide();
+        if ($("#marketplace_bakery_type option:selected").val() == 1) {
+            $(".field-userdata_brand").show();
+        } else {
+            $(".field-userdata_brand").hide();
+        }
+
+        $("#marketplace_bakery_type").on('change', function () {
+            if ($("#marketplace_bakery_type option:selected").val() == 1) {
+                $(".field-userdata_brand").show();
+            } else {
+                $(".field-userdata_brand").hide();
+            }
+        });
+
+
+
+        $("#marketplace_known_for").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_known_for").attr('maxlength', maxLength);
+
+            }
+
+        });
+        $("#marketplace_known_for_1").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_known_for_1").attr('maxlength', maxLength);
+            }
+
+        });
+        $("#marketplace_known_for_2").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_known_for_2").attr('maxlength', maxLength);
+            }
+
+        });
+        $("#marketplace_known_for_3").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_known_for_3").attr('maxlength', maxLength);
+            }
+
+        });
+        $("#marketplace_known_for_4").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_known_for_4").attr('maxlength', maxLength);
+            }
+
+        });
+
+
+        $("#marketplace_store_highlights").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_store_highlights").attr('maxlength', maxLength);
+            }
+
+        });
+        $("#marketplace_store_highlights1").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_store_highlights1").attr('maxlength', maxLength);
+            }
+
+        });
+        $("#marketplace_store_highlights2").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_store_highlights2").attr('maxlength', maxLength);
+            }
+
+        });
+
+        $("#marketplace_store_highlights3").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_store_highlights3").attr('maxlength', maxLength);
+            }
+
+        });
+
+        $("#marketplace_store_highlights4").on('keyup', function () {
+            var maxLength = 20;
+            var length = this.value.length;
+            if (length >= maxLength)
+            {
+                $("#marketplace_store_highlights4").attr('maxlength', maxLength);
+            }
+        });
+        $("#marketplace_contract_start_date").calendar({
+            buttonText: "<?php echo __('Select Date') ?>",
+        });
+        $("#marketplace_contract_end_date").calendar({
+            buttonText: "<?php echo __('Select Date') ?>",
+        });
+        $("#marketplace_userdata_shop_temporarily_u_from").calendar({
+            buttonText: "<?php echo __('Select Date') ?>",
+        });
+        $("#marketplace_userdata_shop_temporarily_u_to").calendar({
+            buttonText: "<?php echo __('Select Date') ?>",
+        });
+    });
+</script>
+<!--bakeway css starts-->
+<style type="text/css">
+
+    div.admin__field.field.field-shop_open_timing,
+    div.admin__field.field.field-shop_open_AMPM,
+    div.admin__field.field.field-shop_close_timing,
+    div.admin__field.field.field-shop_close_AMPM,
+    div.admin__field.field.field-delivery_time_mins.with-addon{
+        float:left;
+        width:40%;
+        margin-bottom: 10px;
+    }
+    div.admin__field.field.field-shop_open_timing > label.label.admin__field-label,
+    div.admin__field.field.field-shop_close_timing > label.label.admin__field-label,
+    div.admin__field.field.field-delivery_time_mins.with-addon > label.label.admin__field-label {
+        width: 125px;
+    }
+    div.admin__field.field.field-shop_delivery_open_time.with-addon,
+    div.admin__field.field.field-userdata_shop_operatational_status{
+        clear: both;
+    }
+    div.admin__field.field.field-userdata_shop_temporarily_u_from,
+    div.admin__field.field.field-userdata_shop_temporarily_u_to{
+        float:left;
+        width: 50%
+    }
+    div.admin__field.field.field-userdata_shop_temporarily_u_from > label{
+        width: 180px;
+    }
+    div.admin__field.field.field-userdata_shop_temporarily_u_to >label{
+        width: 30px;
+    }
+    div.admin__field.field.field-userdata_shop_operatational_status > div.admin__field-control.control{
+        line-height: 32px;
+    }
+    div.admin__field.field.field-checkbox0.with-addon,
+    div.admin__field.field.field-checkbox1.with-addon,
+    div.admin__field.field.field-checkbox2.with-addon,
+    div.admin__field.field.field-checkbox3.with-addon,
+    div.admin__field.field.field-checkbox4.with-addon,
+    div.admin__field.field.field-checkbox5.with-addon,
+    div.admin__field.field.field-checkbox6.with-addon{
+        margin-bottom: 10px;
+    }
+    #marketplace_base_fieldset .field-shop_open_timing,#marketplace_base_fieldset  .field-shop_close_timing,
+    #marketplace_base_fieldset .field-delivery_time_mins{ margin-left: 4%}
+    #marketplace_base_fieldset #marketplace_known_for,
+    #marketplace_base_fieldset #marketplace_known_for_1,
+    #marketplace_base_fieldset #marketplace_known_for_2,
+    #marketplace_base_fieldset #marketplace_known_for_3,
+    #marketplace_base_fieldset #marketplace_known_for_4,
+    #marketplace_base_fieldset  #marketplace_store_highlights,
+    #marketplace_base_fieldset  #marketplace_store_highlights1,
+    #marketplace_base_fieldset  #marketplace_store_highlights2,
+    #marketplace_base_fieldset  #marketplace_store_highlights3,
+    #marketplace_base_fieldset  #marketplace_store_highlights4
+    {    width: 54%; margin-right: 10px;}
+</style>
+<!--bakeway css end--></div>

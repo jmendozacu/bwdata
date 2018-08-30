@@ -1,0 +1,84 @@
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@subject {{trans '%store_name' store_name=$store.getFrontendName()}} Receipt: Confirmation of your {{trans '%store_name' store_name=$store.getFrontendName()}} Order Id {{trans '%increment_id' increment_id=$order.increment_id |raw}}. @-->
+<!--@vars {
+"var formattedBillingAddress|raw":"Billing Address",
+"var order.getEmailCustomerNote()":"Email Order Note",
+"var order.increment_id":"Order Id",
+"layout handle=\"sales_email_order_items\" order=$order area=\"frontend\"":"Order Items Grid",
+"var payment_html|raw":"Payment Details",
+"var formattedShippingAddress|raw":"Shipping Address",
+"var order.getShippingDescription()":"Shipping Description",
+"var shipping_msg":"Shipping message"
+} @-->
+<!--@styles
+.email-template{width:700px;color:#555; margin:0 auto;
+ font-family: Roboto, Arial, Helvetica, sans-serif;color: #565656;font-size: 14px;}
+.total-order-table td span,.email-template tr td h3{font-weight:bold;}
+.footer{text-align:center;}
+.total-order-table tr th{font-size: 15px;color: #222;}
+.total-order-table tr td span.price{font-size: 15px;color: #222;font-weight:normal}
+.email-template span.price{font-size: 15px;color: #222;font-weight:bold}
+.email-deliveryaddress{width:700px;}
+.total-order-table tr th{text-align:left}
+.total-order-table tr td{text-align:right}
+.wrapper .header{border-bottom:solid 1px #adadad;}
+.wrapper .header img{margin-bottom:22px}
+.order-emails .price-grand-total span{}
+.order-emails-sender-information tr p{margin-bottom:3px !important}
+@-->
+
+<body style="background-color: #ececec;padding:10px">
+<div style="width: 700px;padding: 0px 10px 10px 10px;margin: 0 auto;background-color: #fff;">
+
+    <table class="email-template order-emails">
+        <tbody>
+        <tr style="border-bottom:solid 1px #adadad;">
+            <td align="center" height="100" colspan="3">
+                {{template config_path="design/email/header_template"}}
+            </td>
+        </tr>
+
+
+        <tr>
+            <td text-align="left" height="50">
+                {{trans 'Hello'}}  {{trans "%customer_name!" customer_name=$order.getCustomerName()}}
+            </td>
+        </tr>
+
+        <tr style="border-bottom:solid 1px #888;">
+            {{layout handle="sales_email_order_items" order=$order area="frontend"}}
+        </tr>
+
+
+        <tr>
+            <td>
+                <table width="100%" style="margin-top: 8px; margin-bottom: 10px;">
+                    <tbody>
+                    <tr>
+                        <td width="100%" style="font-style: italic;">
+                            <b>{{trans 'Order Placed on %created_at' created_at=$order.getCreatedAtFormatted(2) |raw}}</b>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+
+
+        <tr>
+            <td style="padding-left: 7px;">{{customVar code=order_email_footer_text}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left!important;font-style: italic!important;color: #000;padding-left: 5px;">{{customVar code=order_completed_before_footer_text}}</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+</body>

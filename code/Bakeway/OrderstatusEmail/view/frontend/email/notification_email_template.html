@@ -1,0 +1,46 @@
+<!--
+/**
+ * Bakeway OrderstatusEmail.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_OrderstatusEmail
+ * @author    Bakeway
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<!--@subject  {{var subject}} @-->
+<!--@vars {
+"var vendor_name":"seller sname",
+"var orders_array":"Orders array",
+"var content":"email content",
+} @-->
+<!--@styles
+ .email-content-details,.footer{line-height:23px; color:#555;}   
+@-->
+{{template config_path="design/email/header_template"}}
+
+<table class="email-content-details">
+    <tr class="email-intro">
+        <td>
+          <p class="greeting">
+            {{trans 'Hi,'}}  {{var vendor_name}}
+          </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table>
+            <tr>
+              <td>
+                  <p>{{var content}}</p>
+                  {{if orders_array}}
+                  <p>Order Id's : {{var orders_array}}</p>
+                  {{/if}}
+                  {{customVar code=order_completed_before_footer_text}}
+              </td>
+            </tr>
+            </table>
+        </td>
+      </tr>
+</table>

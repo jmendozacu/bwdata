@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../vendor/magento/framework/ObjectManager/etc/config.xsd">
+    <preference for="Bakeway\ProductApi\Api\VendorProductRepositoryInterface"
+                type="Bakeway\ProductApi\Model\VendorProductRepository"/>
+    <preference for="Bakeway\ProductApi\Api\CatalogSeoRepositoryInterface"
+                type="Bakeway\ProductApi\Model\CatalogSeoRepository"/>
+    <preference for="Bakeway\ProductApi\Api\VendorDeliveryChragesRepositoryInterface"
+                   type="Bakeway\ProductApi\Model\VendorDeliveryChragesRepository"/>
+    <preference for="Bakeway\ProductApi\Api\CategoryProductRepositoryInterface"
+                type="Bakeway\ProductApi\Model\CategoryProductRepository"/>
+    <type name ="Magento\Directory\Model\PriceCurrency">
+          <plugin name="bakeway-round-price" type="Bakeway\ProductApi\Plugin\PriceCurrency"
+          sortOrder="1" disabled="false"/>
+    </type>
+    <preference for="Magento\Framework\Api\ImageContentValidator" type="Bakeway\ProductApi\Model\ImageContentValidator" />
+    <preference for="Bakeway\ProductApi\Api\SyncProductCountInterface"
+                type="Bakeway\ProductApi\Model\SyncProductCount"/>
+</config>

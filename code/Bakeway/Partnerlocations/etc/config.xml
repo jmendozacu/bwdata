@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_Partnerlocations
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <url>
+            <alert>
+                <status>1</status>
+                <url_changes_email_alert_template>url_alert_url_changes_email_alert_template</url_changes_email_alert_template>
+                <receiver_email></receiver_email>
+            </alert>
+        </url>
+       </default>
+</config>

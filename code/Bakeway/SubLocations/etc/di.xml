@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Bakeway
+ * @package   Bakeway_SubLocations
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../vendor/magento/framework/ObjectManager/etc/config.xsd">
+    <preference for="Bakeway\SubLocations\Api\SubLocationsRepositoryInterface" type="Bakeway\SubLocations\Model\SubLocationsRepository" />
+</config>

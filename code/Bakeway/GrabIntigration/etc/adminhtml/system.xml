@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="grab" translate="label" type="text" sortOrder="1500" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <class>separator-top</class>
+            <label>GRAB'S Setting</label>
+            <tab>bakewaysettings</tab>
+            <resource>Bakeway_GrabIntigration::grabIntigration_configuration</resource>
+
+            <group id="grab_setting" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1"  showInStore="1">
+                <label>Grab Delivery Configuration</label>
+                <field id="status" translate="label comment" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>GRAB'S Delivery Elable or Disable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+
+                <field id="base_discount" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Grab base discount</label>
+                </field>
+
+                <field id="distance_amout" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Grab surplus amount for distance</label>
+                </field>
+
+                <field id="final_weight" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Final weight to apply multiplication </label>
+                </field>
+
+                <field id="weight_amount" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Grab surplus amount for weight</label>
+                </field>
+
+                <field id="upper_limit" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Upper limit for grab in Kms</label>
+                </field>
+
+            </group>
+
+            <group id="grab_api_setting" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1"  showInStore="1">
+                <label>Grab Api Setting</label>
+                <field id="client_id" translate="label comment" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client Id</label>
+                </field>
+
+                <field id="public_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Public Key</label>
+                </field>
+
+                <field id="private_key" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Private Key</label>
+                </field>
+
+
+                <field id="apiendpoint" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>GRAB API END POINT FOR PUSH ORDER REQUEST</label>
+                </field>
+
+
+            </group>
+
+            <group id="grab_tax_setting" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1"  showInStore="1">
+            <label>Grab Tax Setting</label>
+            <field id="tax" translate="label comment" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Tax</label>
+            </field>
+            </group>
+
+        </section>
+
+    </system>
+</config>

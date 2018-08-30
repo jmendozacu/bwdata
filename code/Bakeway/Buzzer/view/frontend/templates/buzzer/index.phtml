@@ -1,0 +1,18 @@
+<?php
+$orderIds = $block->getVendorData();
+$onBuzzerflag = false;
+if(count($orderIds) > 0){
+  $onBuzzerflag = true;
+}
+
+$result = [];
+if($onBuzzerflag === true)
+{
+  $result['buzzer'] = 'yes';
+}else{
+  $result['buzzer'] = 'no';
+}
+
+echo json_encode($result);
+exit;
+?>

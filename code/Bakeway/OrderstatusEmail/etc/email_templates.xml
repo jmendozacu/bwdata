@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway OrderstatusEmail.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_OrderstatusEmail
+ * @author    Bakeway
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="order_status_order_accpet_template" label="Order Status Accept Email To user" file="accept.html" type="html" module="Bakeway_OrderstatusEmail" area="frontend"/>
+    <template id="order_status_order_reject_template" label="Order Status Reject Email To user" file="reject.html" type="html" module="Bakeway_OrderstatusEmail" area="frontend"/>
+    <template id="order_status_out_for_delivery_email_template" label="Out For delivery Status user Email" file="out_for_delivery.html" type="html" module="Bakeway_OrderstatusEmail" area="frontend"/>
+    <template id="order_status_ready_for_pickup_email_template" label="Ready for pickup status user Email" file="ready_for_pickup.html" type="html" module="Bakeway_OrderstatusEmail" area="frontend"/>
+    <template id="order_status_complete_email_template" label="Complete status user Email" file="complete_status.html" type="html" module="Bakeway_OrderstatusEmail" area="frontend"/>
+    <template id="order_status_notification_seller_email_template" label="Order Notification Email" file="notification_email_template.html" type="html" module="Bakeway_OrderstatusEmail" area="frontend"/>
+</config>

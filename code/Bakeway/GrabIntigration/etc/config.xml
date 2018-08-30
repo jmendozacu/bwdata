@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_Grabintigration
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <grab>
+            <grab_setting>
+                <status>1</status>
+                <base_discount>60</base_discount>
+                <distance_amout>10</distance_amout>
+                <final_weight>1.5</final_weight>
+                <weight_amount>2</weight_amount>
+                <upper_limit>5</upper_limit>
+            </grab_setting>
+            <grab_api_setting>
+                <client_id>2252</client_id>
+                <public_key>dd52b7719ed7c677b8615cd6266d38cc8263561ff24a5e0bbb7fc2f153a14529</public_key>
+                <private_key>c0405f5cd57e8584b062fa2228ff0711fb48856bd09eca1f8c03fa4770159d5a</private_key>
+                <apiendpoint>http://api.grab.in/pos/pushorder/</apiendpoint>
+            </grab_api_setting>
+            <grab_tax_setting>
+                <tax>18</tax>
+            </grab_tax_setting>
+        </grab>
+
+       </default>
+</config>

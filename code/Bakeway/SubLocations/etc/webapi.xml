@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Bakeway
+ *
+ * @category  Bakeway
+ * @package   Bakeway_SubLocations
+ * @author    Bakeway
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/cities" method="GET">
+        <service class="Bakeway\SubLocations\Api\SubLocationsRepositoryInterface" method="getCityList"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/cities/:cityId/localities" method="GET">
+        <service class="Bakeway\SubLocations\Api\SubLocationsRepositoryInterface" method="getSubLocalityList"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

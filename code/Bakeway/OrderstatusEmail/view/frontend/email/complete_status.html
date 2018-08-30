@@ -1,0 +1,98 @@
+<!--
+/**
+ * Bakeway OrderstatusEmail.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_OrderstatusEmail
+ * @author    Bakeway
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<!--@subject {{trans " %store_name" store_name=$store.getFrontendName()}}  Receipt:  Delivery Confirmation of the order id {{var myvar3}}.  @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name",
+"var business_name":"seller busines sname",
+"var phone_number":"seller phone number",
+"var business_name":"seller business name",
+"var product_name":"Product Name",
+"var rating_url":"Rating Token Url",
+} @-->
+<!--@styles
+ .email-content-details,.footer{line-height:23px; color:#555;}
+ .email-content-details .footer-text{font-style: italic;}
+ .wrapper .header{border-bottom:solid 1px #adadad;}
+ .wrapper .header img{margin-bottom:32px}
+@-->
+<body style="background-color: #ececec;padding:10px">
+<div style="width: 700px;padding: 0px 10px 10px 10px;margin: 0 auto;background-color: #fff;">
+<table class="email-content-details">
+    <tbody>
+    <tr style="border-bottom:solid 1px #adadad;">
+        <td align="center" height="100" colspan="3">
+            {{template config_path="design/email/header_template"}}
+        </td>
+    </tr>
+    <tr>
+        <td text-align="left" height="50">
+            {{if $myvar2}}
+            {{trans 'Hello'}}  {{trans "%customer_name," customer_name=$myvar2}}!
+            {{else}}
+            {{trans 'Hello'}}  {{var guest_name}}!
+            {{/if}}
+        </td>
+    </tr>
+    <tr>
+        <td text-align="left" colspan="3">
+            <p>Your order has been successfully delivered. Happy Celebration!</p>
+            <p>We look forward to serve you again & would love to hear about your ordering experience with us.</p>
+            <p>Review us here:</p>
+            <p><a href="{{var rating_url}}" target="_blank" type="button" style="border-radius:3px;text-decoration: none; padding: 10px 15px;background-color: #f9103d;border:0;color: #fff;font-size: 15px;font-weight:bold ">SUBMIT REVIEW</a></p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" height="20px"></td>
+    </tr>
+
+    {{customVar code=order_email_footer_text}}
+    <tr>
+        <td colspan="3" height="20px"></td>
+    </tr>
+    {{customVar code=order_completed_before_footer_text}}
+
+     <!--<tr class="email-intro">
+        <td>
+            <p class="greeting">
+                {{if $myvar2}}
+                {{trans 'Hello'}}  {{trans "%customer_name," customer_name=$myvar2}}!
+                {{else}}
+                {{trans 'Hello'}}  {{var guest_name}}!
+                {{/if}}
+            </p>
+        </td>
+    </tr>
+     <tr class="email-information">
+        <td>
+            <table>
+                <tr>
+                    <td>
+                        <p>Your order has been successfully delivered. Happy Celebration!</p>
+                        <p>We look forward to serve you again & would love to hear about your ordering experience with us.</p>
+                        <p>Review us here:</p>
+                        <a href="{{var rating_url}}"><div style="background-color: firebrick;color: #FFFFFF;text-align: center;padding: 11px 3px; border-radius: 6px;width: 20%;font-size: 16px;
+    margin-bottom: 11px;">SUBMIT REVIEW</div></a>
+                        {{customVar code=support_bakeway_phone_no}}
+                        </br>
+                        </br>
+                        {{customVar code=order_completed_before_footer_text}}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>-->
+    </tbody>
+</table>
+</div>
+</body>

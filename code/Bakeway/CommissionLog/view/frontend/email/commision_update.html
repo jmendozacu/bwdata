@@ -1,0 +1,67 @@
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<!--@subject Commision Log Alert For Seller Id {{var sellerid}}  @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var rate":"Rate",
+"var logemail":"Email",
+"var date":"Date",
+"var sellerid":"Seller Id",
+"var sellername":"Seller Name",
+"var businessname":"Business Name",
+"var city":"City"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+
+    <tr class="email-summary">
+        <td>
+            <table class="product-name">
+                <tr>
+                    <td>
+                        <p>{{trans "Seller Id"}}  : {{var sellerid|raw}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>{{trans "Business Name"}}  : {{var businessname|raw}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>{{trans "City"}}  : {{var city|raw}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>{{trans "Commission Rate"}} : {{var rate|raw}}%</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>{{trans "Updated Date"}} : {{var date|raw}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>{{trans "Updated By"}} : {{var logemail|raw}}</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+</table>
+
+{{template config_path="design/email/footer_template"}}

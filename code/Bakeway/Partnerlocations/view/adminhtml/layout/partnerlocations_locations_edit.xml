@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/framework/View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Store Days Manager</title>
+        <script src="Bakeway_Partnerlocations::js/jquery-gmaps-latlon-picker.js"/>
+        <css src="Bakeway_Partnerlocations::css/map.css"/>
+    </head>
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Bakeway\Partnerlocations\Block\Adminhtml\Locations\Edit" name="locations_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Bakeway\Partnerlocations\Block\Adminhtml\Locations\Edit\Tabs" name="locations_edit_edit_tabs">
+                <block class="Bakeway\Partnerlocations\Block\Adminhtml\Locations\Edit\Tab\Form" name="locations_edit_edit_tab_main"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">main_section</argument>
+                    <argument name="block" xsi:type="string">locations_edit_edit_tab_main</argument>
+                </action>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="js">
+            <block class="Magento\Backend\Block\Template" name="attribute_edit_js" template="Bakeway_Partnerlocations::tab/formjs.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

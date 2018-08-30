@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/framework/View/Layout/etc/page_configuration.xsd">
+    <update handle="sitemap_sitemap_index_grid" />
+    <body>
+        <referenceContainer name="content">
+            <block class="Bakeway\Sitemap\Block\Adminhtml\Sitemap\Index" name="bakeway.sitemap.index" template="sitemap/index.phtml">
+                <block class="Bakeway\Sitemap\Block\Adminhtml\Sitemap\Grid" name="sitemap.sitemap.index.grid.container" />
+            </block>
+        </referenceContainer>
+    </body>
+</page>

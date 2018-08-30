@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="\Magento\SalesRule\Model\Rule\Action\Discount\ByPercent"
+                type="\Bakeway\PartnerCatalogRule\Model\Rule\Action\Discount\ByPercent"/>
+    <preference for="\Magento\CatalogRule\Model\Indexer\IndexBuilder"
+                type="\Bakeway\PartnerCatalogRule\Model\Indexer\IndexBuilder"/>
+    <preference for="\Magento\CatalogRule\Model\ResourceModel\Rule"
+                type="\Bakeway\PartnerCatalogRule\Model\ResourceModel\Rule"/>
+
+</config>

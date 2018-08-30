@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="reviewrating" translate="label" type="text" sortOrder="1600" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <class>separator-top</class>
+            <label>Review and Rating Setting</label>
+            <tab>bakewaysettings</tab>
+            <resource>Bakeway_ReviewRating::reviewRating_configuration</resource>
+
+            <group id="review_setting" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1"  showInStore="1">
+                <label>React Setting</label>
+              <field id="react_url" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>React Url</label>
+                </field>
+           </group>
+        </section>
+     </system>
+</config>

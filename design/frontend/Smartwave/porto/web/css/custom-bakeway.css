@@ -1,0 +1,9 @@
+.block-collapsible-nav .item .notifications-action a:before, .block-collapsible-nav .nav a:before {
+    content: none
+}
+
+.notification-link .notification-block {
+    position: absolute;
+    right: -12px !important;
+    top: -2px;
+}

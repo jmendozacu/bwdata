@@ -1,0 +1,105 @@
+<!--
+/**
+ * Bakeway OrderstatusEmail.
+ *
+ * @category  Bakeway
+ * @package   Bakeway_OrderstatusEmail
+ * @author    Bakeway
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<!--@subject  {{trans " %store_name" store_name=$store.getFrontendName()}} order Id {{var myvar3}} has not been accepted.  @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name",
+"var business_name":"seller busines sname",
+"var phone_number":"seller phone number",
+"var business_name":"seller business name",
+"var product_name":"Product Name"
+"var reject_reason":"Reject Reason
+} @-->
+<!--@styles
+ .email-content-details,.footer{line-height:23px; color:#555;}   
+@-->
+<body style="background-color: #ececec;padding:10px">
+<div style="width: 700px;padding: 0px 10px 10px 10px;margin: 0 auto;background-color: #fff;">
+<table class="email-content-details">
+    <tbody>
+    <tr style="border-bottom:solid 1px #adadad;">
+        <td align="center" height="100" colspan="3">
+            {{template config_path="design/email/header_template"}}
+        </td>
+    </tr>
+    <tr>
+        <td text-align="left" height="50">
+            {{if $myvar2}}
+            {{trans 'Dear'}}  {{trans "%customer_name," customer_name=$myvar2}}!
+            {{else}}
+            {{trans 'Dear'}}  {{var guest_name}}!
+            {{/if}}
+        </td>
+    </tr>
+    <tr>
+        <td text-align="left" colspan="3">
+
+            <p>We regret to inform you that the order id {{var myvar3}} has not been accepted from {{var business_name}} due to {{var reject_reason}}</p>
+            <p>If you wish to reorder from a different baker, just click on the link <a target="_blank" href="{{customVar code=email_logo_target_link}}">bakeway.com</a></p>
+            <p>For the refund process Team Bakeway will assist you, just share the bank details:</p>
+            <p>&nbsp;</p>
+            <p style="margin-bottom: -10px;"><strong>Name:</strong></p>
+            <p style="margin-bottom: -10px;"><strong>Account Number:</strong><p>
+            <p style="margin-bottom: -10px;"><strong>Type of Account:</strong><p>
+            <p style="margin-bottom: -10px;"><strong>IFSC Code:</strong><p>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td text-align="left" colspan="3">
+            <strong>Note: Refund process takes at least 48 working hours.</strong>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td>{{customVar code=order_email_footer_text}}</td>
+    </tr>
+    <tr>
+        <td>{{customVar code=order_completed_before_footer_text}}</td>
+    </tr>
+
+    </tbody>
+    <!--<tr class="email-intro">
+        <td>
+          <p class="greeting">
+              {{if $myvar2}}
+              {{trans 'Hi'}}  {{trans "%customer_name," customer_name=$myvar2}}
+              {{else}}
+              {{trans 'Hi'}}  {{var guest_name}}
+              {{/if}}
+          </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table>
+            <tr>
+              <td>
+                  <p>Unfortunately, your <b>order no {{var myvar3}}</b> for <b>{{var product_name}}</b> from Bakeway partner <b>{{var business_name}}</b>
+                  could not be confirmed at the moment. We regret the inconvenience caused to you. Meanwhile, you may also checkout other
+                  options for you we have on our portal.</p>
+                  <p> You needn’t worry about your cancelled order payment.
+                      For refunds, please share your account details i.e account number, IFSC, Name, Branch by sending an email to {{trans '<a href="mailto:%store_email">%store_email</a>.' store_email=$store_email |raw}}.
+                  For any further queries, drop in an email at {{trans '<a href="mailto:%store_email">%store_email</a>.' store_email=$store_email |raw}} and they will be more
+                  than happy to assist you on the same.</p>
+                  {{customVar code=order_completed_before_footer_text}}
+              </td>
+            </tr>
+            </table>
+        </td>
+      </tr>-->
+</table>
+    </div>
+</body>

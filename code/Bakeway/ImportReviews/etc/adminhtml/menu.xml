@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Bakeway_ImportReviews::manage_importratings" title="Import Reviews Ratings" translate="title"
+             module="Bakeway_ImportReviews" parent="Magento_Backend::marketing_user_content" sortOrder="10"
+             action="importreviews/index" resource="Bakeway_ImportReviews::manage_importratings"/>
+    </menu>
+</config>

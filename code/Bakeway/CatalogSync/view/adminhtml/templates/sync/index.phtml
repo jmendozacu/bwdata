@@ -1,0 +1,21 @@
+<div class="import-export-tax-rates">
+    <div class="import-tax-rates">
+        <?php if ($block->getUseContainer()): ?>
+        <form id="sync" class="admin__fieldset" action="<?php /* @escapeNotVerified */
+        echo $block->getUrl('catalogsync/sync/sync') ?>" method="post" enctype="multipart/form-data">
+            <?php endif; ?>
+            <?php echo $block->getBlockHtml('formkey') ?>
+            <div class="fieldset admin__field">
+                <label for="export_product_feed_file" class="admin__field-label"><span><?php /* @escapeNotVerified */
+                        echo __('Catalog Sync') ?></span></label>
+                <div class="admin__field-control">
+                    <input type="submit" value="Sync"/>
+                </div>
+            </div>
+            <?php if ($block->getUseContainer()): ?>
+        </form>
+        <?php endif; ?>
+
+    </div>
+
+</div>

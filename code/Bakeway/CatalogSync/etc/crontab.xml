@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bakeway
+ *
+ * @category  Bakeway
+ * @package   Bakeway_CatalogSync
+ * @author    Bakeway
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="catalog_sync_group">
+        <job name="bakeway_catalog_sync_cron" instance="Bakeway\CatalogSync\Model\CatalogProductSync" method="syncProductAttributes">
+            <schedule>0 */1 * * *</schedule>
+        </job>
+    </group>
+</config>
