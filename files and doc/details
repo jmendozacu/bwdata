@@ -1,0 +1,236 @@
+
+---------------------------------------install php
+
+sudo apt-get install php7.0-common php7.0-gd php7.0-mcrypt php7.0-curl php7.0-intl php7.0-xsl php7.0-mbstring php7.0-zip php7.0-iconv mysql-client
+--------------------------------------------------------------------------------------------------------------------------------
+---------------------------------add new user ubuntu---------------------------------
+
+sudo useradd magento
+
+sudo usermod -g www-data magento
+
+
+sudo find var vendor pub/static pub/media app/etc -type f -exec chmod g+w {} \;
+sudo find var vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} \;
+sudo chown -R magento:www-data .
+sudo chmod u+x bin/magento
+sudo systemctl restart apache2
+
+
+
+php bin/magento setup:install --admin-firstname="admin" --admin-lastname="admin123" --admin-email="kush14011989@email.com" --admin-user="admin" --admin-password="admin123" --db-name="mg_ce222" --db-host="localhost" --db-user="root" --db-password="kush"
+
+
+
+------------------------------------set cron jobs start------------------------------------------------------------------
+
+
+sudo crontab -u magento -e
+
+Set Cron JobsPermalink
+Magento relies on cron to perform tasks like continuously reindexing your site and generating emails and newsletters. If you logged into your admin panel, you may have noticed an error message saying that cron jobs needed to be set. Fortunately, the cron jobs Magento uses for a base installation are very easy to configure.
+
+Open the crontab for your magento user. Perform this step as a user with sudo privileges:
+
+sudo crontab -u magento -e
+If this is your first time using cron, you’ll be prompted to select a text editor. If you don’t have a preference, select 2 to use nano.
+Add the following lines to the end of the file, substituting your Magento installation directory in each:
+
+* * * * * /usr/bin/php /var/www/html/example.com/public_html/bin/magento cron:run | grep -v "Ran jobs by schedule" >> /var/www/html/example.com/public_html/var/log/magento.cron.log
+* * * * * /usr/bin/php /var/www/html/example.com/public_html/update/cron.php >> /var/www/html/example.com/public_html/var/log/update.cron.log
+* * * * * /usr/bin/php /var/www/html/example.com/public_html/bin/magento setup:cron:run >> /var/www/html/example.com/public_html/var/log/setup.cron.log
+The first line handles reindexing. The second and third lines are needed by the Component Manager and System Upgrade, respectively. The /usr/bin/php part of each line specifies your PHP binary. If you installed PHP using our LAMP stack guide, you can leave this value as we have shown it, but if you installed PHP by some other method, you can check its location with which php and substitute that value.
+
+When you’re done, save and exit the file.
+To verify that the rules have been set properly, log out of your Magento admin and log back in. If everything has been configured correctly, you should no longer see the notification.
+
+
+------------------------------------set cron jobs end------------------------------------------------------------------
+
+->addColumn(
+    'created_at',
+    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+    null,
+    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+    'Created At'
+)->addColumn(
+    'updated_at',
+    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+    null,
+    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+    'Updated At'
+)
+-------------------------------------REST-----API---------------------------------------------------------------
+
+
+To make a long story short, if your entities will be used by other modules,
+then yes, you probably want to add a repository.
+
+Extension Attributes :Technically this is only required if you want other modules to be able to add attributes to your entity.
+
+--------------------------------------adding custom logger magento 2--------------------------------------------
+
+use Psr\Log\LoggerInterface as Logger;
+
+ public function __construct(
+        Logger $logger,
+    ) {
+        $this->logger = $logger;
+    }
+
+-------------------------------------set extension attributes --------------------------------------------------
+
+            $deliveryType = $order->getData('delivery_type');
+            $deliveryTime = $order->getData('delivery_time');
+            $extensionAttributes->setDeliveryType($deliveryType);
+    	    $extensionAttributes->setDeliveryTime($deliveryTime);
+            $order->setExtensionAttributes($extensionAttributes);
+
+----------------------------------------------------------------------------------------------------------------
+use of exception 
+
+namespace Magento\Integration\Model;
+
+use Magento\Framework\Exception\InputException;
+
+/**
+ * Validator Helper for user credentials
+ */
+class CredentialsValidator
+{
+    /**
+     * Validate user credentials
+     *
+     * @param string $username
+     * @param string $password
+     * @throws InputException
+     * @return void
+     */
+    public function validate($username, $password)
+    {
+        $exception = new InputException();
+        if (!is_string($username) || strlen($username) == 0) {
+            $exception->addError(__('%fieldName is a required field.', ['fieldName' => 'username']));
+        }
+        if (!is_string($password) || strlen($password) == 0) {
+            $exception->addError(__('%fieldName is a required field.', ['fieldName' => 'password']));
+        }
+        if ($exception->wasErrorAdded()) {
+            throw $exception;
+        }
+    }
+}
+
+
+
+
+
+protected $_resourceConnection;
+protected $_connection;
+public function __construct(
+    \Magento\Framework\App\ResourceConnection $resourceConnection
+) {
+    $this->_resourceConnection = $resourceConnection;
+}
+public function getCollection()
+{	
+    $this->_connection = $this->_resourceConnection->getConnection();
+    //Your custom sql query
+    $query = "SELECT * FROM ( SELECT * FROM TABLE_NAME WHERE customer_id IN ( 0, 5 ) ORDER BY feed_id DESC ) AS t1 GROUP BY position limit 0,5"; 
+
+    $collection = $this->_connection->fetchAll($query);
+    return $collection;
+}
+
+
+public function __construct(
+        \Vendor\Modulename\Model\CustomFactory $customFactory
+    ) {
+        $this->customFactory = $customFactory;
+    }
+
+public function getMyQuery(){    
+	$collection = $this->customFactory->create()->getCollection();
+	$collection->getSelect()->columns(
+    array(
+        't1' => new \Zend_Db_Expr('SELECT * FROM TABLE_NAME WHERE customer_id IN ( 0, 5 ) ORDER BY feed_id DESC')
+        );
+    )->group(
+        'position'
+    );
+}
+
+
+
+
+$columns = (null === $alias) ? [$skuField => $skuField] : [$alias => $skuField];
+$this->fieldAlias[\Magento\Catalog\Model\Product::ENTITY][$skuField] = (null === $alias) ? $skuField : $alias;
+$this->getSelect()->joinLeft(
+	["cpe" => $this->getTable("catalog_product_entity")],
+	new \Zend_Db_Expr("cpe.entity_id = main_table.product_id"),
+	$columns
+);
+return $this;
+        
+---------------------------------------------------------------------------------------
+Magento2 routing
+
+index.php -> magento >framework ->app ->bootsrap->create(Bp,$server)
+$app = $bootstrap->createApplication(http:class)
+$bootstrap:run($app);
+
+$response = $application->launch();
+
+$result = $frontController->dispatch($this->_request);
+
+
+
+(1) bootstrap class create function.
+          bootstrap::create(BP,$server);
+          
+(2) in bootstrap class static function create
+   here autoloaer function call jha magento ki sab root folder call hote  h and sab class core class load hote h 
+  Static method so that client code does not have to create Object Manager Factory every time Bootstrap is called        
+   $factory = self::createObjectManagerFactory($rootDir, $initParams);
+
+(3) now we call bootstrap->createApplication method with parapeters http:class
+   $application = $this->objectManager->create($type, $arguments);
+   yha par hum application instance create kar rahe hai 
+  return application perform.
+  Factory method for creating application instances
+  
+(4) bootstrap->run($app) of step 3
+
+(5) $response = $application->launch();
+    \Magento\Framework\Profiler::start('magento');
+	$this->initErrorHandler();
+	$this->assertMaintenance();
+	$this->assertInstalled();
+	$response = $application->launch();
+	$response->sendResponse();
+	\Magento\Framework\Profiler::stop('magento');  
+
+(6) in http class call method launch()
+   -$frontController = $this->_objectManager->get(\Magento\Framework\App\FrontControllerInterface::class);
+   -$result = $frontController->dispatch($this->_request);
+   -controller_front_send_response_before
+   
+----------------------------------------------------------------------------------------------------
+ JSON.parse() is used for parsing data that was received as JSON; it deserializes a JSON string into a JavaScript object.
+   
+ JSON.stringify() serializes a JavaScript object into a JSON string.
+----------------------------------------------------------------------------------------------------
+
+
+
+----------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------
+

@@ -1,0 +1,8 @@
+'host' => 'bakeway-rds.cscupwfn77vh.ap-south-1.rds.amazonaws.com',
+        'dbname' => 'bakeway_11_12_2017',
+        'username' => 'root',
+        'password' => 'zaq1!1qaz',
+        
+mysqldump -u root -p bakeway_11_12_2017 > /var/www/html/bakeway/bakeway_17_08_2018.sql -h bakeway-rds.cscupwfn77vh.ap-south-1.rds.amazonaws.com
+mysqldump -u root -p'zaq1!1qaz' -h bakeway-rds.cscupwfn77vh.ap-south-1.rds.amazonaws.com bakeway_11_12_2017 > /var/www/html/db/proddb.sql
+      

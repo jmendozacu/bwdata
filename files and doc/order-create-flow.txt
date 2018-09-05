@@ -1,0 +1,34 @@
+Endpoints :
+Loggend in user : /V1/carts/mine/order-create
+Guest user      : /V1/guest-carts/:guest_quote_id/order-create
+
+
+
+SampleRequest (Only remove paymentDetail parameter from current payload) :  
+{ 
+	"cartId" : 7826,	
+	"payload":{
+		"paymentMethod": 
+    	{
+    		"method": "razorpay"
+    	}
+	}
+}
+
+Sample Response For Paytm :
+{
+    "entity_id": "1261",
+    "increment_id": "000002007",
+    "paymentDetails": {
+        "method": "paytm"
+    }
+}
+Sample Response For Razorpay :
+{
+    "paymentDetails": {
+        "razorpay_order_id": "order_A6BcDAxwHRvuFg",
+        "method": "razorpay"
+    },
+    "entity_id": "1262",
+    "increment_id": "000002008"
+}
